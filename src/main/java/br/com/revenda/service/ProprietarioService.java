@@ -28,7 +28,29 @@ public class ProprietarioService {
         return proprietarioRepository.findById(id);
     }
 
+    public boolean existePorId(Long id) {
+        return proprietarioRepository.existsById(id);
+    }
+
     public void deletarId(Long id){
         proprietarioRepository.deleteById(id);
+    }
+
+    public Proprietario atualizar(Long id, Proprietario novosDados){
+        Optional<Proprietario> proprietarioExistente = proprietarioRepository.findById(id);
+        if (proprietarioExistente.isPresent()){
+            Proprietario proprietario = proprietarioExistente.get();
+            proprietario.setNomeCompleto(novosDados.getNomeCompleto());
+            proprietario.setCnh(novosDados.getCnh());
+            proprietario.setCpf(novosDados.getCpf());
+            proprietario.setEmail(novosDados.getEmail());
+            proprietario.setEndereco(novosDados.getEndereco());
+            proprietario.setTelefone(novosDados.getTelefone());
+            return proprietarioRepository.save(proprietario);
+        }
+        else {
+            return null;
+        }
+
     }
 }

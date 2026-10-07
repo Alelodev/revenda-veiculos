@@ -10,6 +10,7 @@ public class Proprietario {
     @Column(name = "id_proprietario", nullable = false)
     private Long idProprietario;
 
+
     @Column(name = "nome_completo", nullable = false, length = 150)
     private String nomeCompleto;
     @Column(name = "cpf", nullable = false, unique = true, length = 11)

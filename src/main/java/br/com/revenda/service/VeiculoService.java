@@ -1,5 +1,6 @@
 package br.com.revenda.service;
 
+import br.com.revenda.model.Proprietario;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.VeiculoRepository;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,28 @@ import java.util.Optional;
 public class VeiculoService {
 
     private VeiculoRepository veiculoRepository;
+    private ProprietarioService proprietarioService;
 
-    public VeiculoService(VeiculoRepository veiculoRepository) {
+    public VeiculoService(VeiculoRepository veiculoRepository, ProprietarioService proprietarioService) {
         this.veiculoRepository = veiculoRepository;
+        this.proprietarioService = proprietarioService;
     }
 
     public Veiculo salvar(Veiculo veiculo) {
-        return veiculoRepository.save(veiculo);
+        if (veiculo.getProprietario() != null) {
+            Optional<Proprietario> proprietarioExistente =
+                    proprietarioService.buscarId(
+                            veiculo.getProprietario().getIdProprietario()
+                    );
+            if(proprietarioExistente.isPresent()){
+                veiculo.setProprietario(proprietarioExistente.get());
+                return veiculoRepository.save(veiculo);
+            } else{
+                return null;
+            }
+        }else {
+            return null;
+        }
     }
 
     public List<Veiculo> mostrarTodos() {
