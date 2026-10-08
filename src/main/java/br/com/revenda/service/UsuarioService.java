@@ -14,6 +14,7 @@ public class UsuarioService {
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
+
     }
 
     public Usuario salvar(Usuario usuario) {
@@ -31,4 +32,17 @@ public class UsuarioService {
     public void deletarId(Long id) {
         usuarioRepository.deleteById(id);
     }
+
+    public Usuario atualizar(Long id, Usuario novosDados) {
+        Optional<Usuario> usuarioExiste = usuarioRepository.findById(id);
+        if (usuarioExiste.isPresent()) {
+            Usuario usuario = usuarioExiste.get();
+            usuario.setLogin(novosDados.getLogin());
+            usuario.setSenha(novosDados.getSenha());
+            return usuarioRepository.save(usuario);
+        }
+        return null;
+    }
+
 }
+

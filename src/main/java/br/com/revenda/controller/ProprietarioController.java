@@ -35,16 +35,17 @@ public class ProprietarioController {
         return proprietarioService.salvar(proprietario);
     }
 
-    @DeleteMapping("/proprietarios/{id}")
-    @ResponseBody
-    public void deletar(@PathVariable Long id) {
-        proprietarioService.deletarId(id);
-    }
 
     @PutMapping("/proprietarios/{id}")
     @ResponseBody
     public Proprietario atualizar(@PathVariable Long id, @RequestBody Proprietario proprietario){
         return proprietarioService.atualizar(id, proprietario);
 
+    }
+
+    @DeleteMapping("/proprietarios/{id}")
+    @ResponseBody
+    public void deletar(@PathVariable Long id) {
+        proprietarioService.deletarId(id);
     }
 }
