@@ -2,6 +2,7 @@ package br.com.revenda.controller;
 
 import br.com.revenda.model.Documento;
 import br.com.revenda.service.DocumentoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,31 +20,54 @@ public class DocumentoController {
 
     @GetMapping("/documentos")
     @ResponseBody
-    public List<Documento> listarDocumentos() {
-        return documentoService.mostrarTodos();
+    public ResponseEntity<List<Documento>> listarDocumentos() {
+        List<Documento> mostrarDocumentos = documentoService.mostrarTodos();
+        return ResponseEntity.ok(mostrarDocumentos);
     }
 
     @GetMapping("/documentos/{id}")
     @ResponseBody
-    public Optional<Documento> buscarPorId(@PathVariable Long id) {
-        return documentoService.buscarId(id);
+    public ResponseEntity<Documento> buscarPorId(@PathVariable Long id) {
+        Optional<Documento> documento = documentoService.buscarId(id);
+        if (documento.isPresent()) {
+            return ResponseEntity.ok(documento.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/documentos")
     @ResponseBody
-    public Documento cadastrar(@RequestBody Documento documento) {
-        return documentoService.salvar(documento);
+    public ResponseEntity<Documento> cadastrar(@RequestBody Documento documento) {
+        Documento documentoSalvo = documentoService.salvar(documento);
+
+       if(documentoSalvo != null){
+           return ResponseEntity.status(201).body(documentoSalvo);
+       } else {
+           return ResponseEntity.badRequest().build();
+       }
     }
 
     @PutMapping("/documentos/{id}")
     @ResponseBody
-    public Documento atualizar(@PathVariable Long id, @RequestBody Documento documento) {
-        return documentoService.atualizar(id, documento);
+    public ResponseEntity<Documento> atualizar(@PathVariable Long id, @RequestBody Documento documento) {
+        Documento documentoAtualizado = documentoService.atualizar(id, documento);
+        if (documentoAtualizado != null) {
+            return ResponseEntity.ok(documentoAtualizado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/documentos/{id}")
     @ResponseBody
-    public void deletar(@PathVariable Long id) {
-        documentoService.deletarId(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        Optional<Documento> documento = documentoService.buscarId(id);
+        if (documento.isPresent()) {
+            documentoService.deletarId(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

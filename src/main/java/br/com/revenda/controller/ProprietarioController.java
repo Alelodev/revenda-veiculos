@@ -2,6 +2,7 @@ package br.com.revenda.controller;
 
 import br.com.revenda.model.Proprietario;
 import br.com.revenda.service.ProprietarioService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,33 +20,51 @@ public class ProprietarioController {
 
     @GetMapping("/proprietarios")
     @ResponseBody
-    public List<Proprietario> listarProprietarios(){
-        return proprietarioService.mostrarTodos();
+    public ResponseEntity<List<Proprietario>> listarProprietarios(){
+        List<Proprietario> mostarProprietarios = proprietarioService.mostrarTodos();
+        return ResponseEntity.ok(mostarProprietarios);
     }
 
     @GetMapping("/proprietarios/{id}")
     @ResponseBody
-    public Optional<Proprietario> buscaPorId(@PathVariable Long id){
-        return proprietarioService.buscarId(id);
+    public ResponseEntity<Proprietario> buscaPorId(@PathVariable Long id){
+        Optional<Proprietario> proprietario = proprietarioService.buscarId(id);
+        if (proprietario.isPresent()) {
+            return ResponseEntity.ok(proprietario.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/proprietarios")
     @ResponseBody
-    public Proprietario cadastrar(@RequestBody Proprietario proprietario) {
-        return proprietarioService.salvar(proprietario);
+    public ResponseEntity<Proprietario> cadastrar(@RequestBody Proprietario proprietario) {
+        Proprietario proprietarioSalvo = proprietarioService.salvar(proprietario);
+
+        return ResponseEntity.status(201).body(proprietarioSalvo);
     }
 
 
     @PutMapping("/proprietarios/{id}")
     @ResponseBody
-    public Proprietario atualizar(@PathVariable Long id, @RequestBody Proprietario proprietario){
-        return proprietarioService.atualizar(id, proprietario);
-
+    public ResponseEntity<Proprietario> atualizar(@PathVariable Long id, @RequestBody Proprietario proprietario){
+        Proprietario proprietarioAtualizado = proprietarioService.atualizar(id, proprietario);
+        if (proprietarioAtualizado != null) {
+            return ResponseEntity.ok(proprietarioAtualizado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/proprietarios/{id}")
     @ResponseBody
-    public void deletar(@PathVariable Long id) {
-        proprietarioService.deletarId(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        Optional<Proprietario> proprietario = proprietarioService.buscarId(id);
+        if(proprietario.isPresent()){
+            proprietarioService.deletarId(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
