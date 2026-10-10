@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class DocumentoController {
@@ -28,12 +27,8 @@ public class DocumentoController {
     @GetMapping("/documentos/{id}")
     @ResponseBody
     public ResponseEntity<Documento> buscarPorId(@PathVariable Long id) {
-        Optional<Documento> documento = documentoService.buscarId(id);
-        if (documento.isPresent()) {
-            return ResponseEntity.ok(documento.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Documento documento = documentoService.buscarId(id);
+        return ResponseEntity.ok(documento);
     }
 
     @PostMapping("/documentos")
@@ -41,33 +36,22 @@ public class DocumentoController {
     public ResponseEntity<Documento> cadastrar(@RequestBody Documento documento) {
         Documento documentoSalvo = documentoService.salvar(documento);
 
-       if(documentoSalvo != null){
-           return ResponseEntity.status(201).body(documentoSalvo);
-       } else {
-           return ResponseEntity.badRequest().build();
-       }
+        return ResponseEntity.status(201).body(documentoSalvo);
+
     }
 
     @PutMapping("/documentos/{id}")
     @ResponseBody
     public ResponseEntity<Documento> atualizar(@PathVariable Long id, @RequestBody Documento documento) {
         Documento documentoAtualizado = documentoService.atualizar(id, documento);
-        if (documentoAtualizado != null) {
-            return ResponseEntity.ok(documentoAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(documentoAtualizado);
+
     }
 
     @DeleteMapping("/documentos/{id}")
     @ResponseBody
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        Optional<Documento> documento = documentoService.buscarId(id);
-        if (documento.isPresent()) {
-            documentoService.deletarId(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        documentoService.deletarId(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.revenda.service;
 
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Proprietario;
 import br.com.revenda.repository.ProprietarioRepository;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,10 @@ public class ProprietarioService {
         return proprietarioRepository.findAll();
     }
 
-    public Optional<Proprietario> buscarId(Long id){
-        return proprietarioRepository.findById(id);
+    public Proprietario buscarId(Long id){
+        return proprietarioRepository.findById(id)
+                .orElseThrow(()
+                -> new RecursoNaoEncontradoException("Proprietario nao encontrado"));
     }
 
     public boolean existePorId(Long id) {
@@ -33,7 +36,11 @@ public class ProprietarioService {
     }
 
     public void deletarId(Long id){
-        proprietarioRepository.deleteById(id);
+        if(proprietarioRepository.existsById(id)){
+            proprietarioRepository.deleteById(id);
+        } else {
+            throw new RecursoNaoEncontradoException("Proprietario nao encontrado");
+        }
     }
 
     public Proprietario atualizar(Long id, Proprietario novosDados){
@@ -49,7 +56,7 @@ public class ProprietarioService {
             return proprietarioRepository.save(proprietario);
         }
         else {
-            return null;
+            throw new RecursoNaoEncontradoException("Proprietario nao encontrado");
         }
 
     }

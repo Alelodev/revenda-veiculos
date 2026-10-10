@@ -1,6 +1,7 @@
 package br.com.revenda.controller;
 
 import br.com.revenda.model.Proprietario;
+import br.com.revenda.model.Usuario;
 import br.com.revenda.service.ProprietarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,12 +29,8 @@ public class ProprietarioController {
     @GetMapping("/proprietarios/{id}")
     @ResponseBody
     public ResponseEntity<Proprietario> buscaPorId(@PathVariable Long id){
-        Optional<Proprietario> proprietario = proprietarioService.buscarId(id);
-        if (proprietario.isPresent()) {
-            return ResponseEntity.ok(proprietario.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Proprietario proprietario = proprietarioService.buscarId(id);
+        return ResponseEntity.ok(proprietario);
     }
 
     @PostMapping("/proprietarios")
@@ -49,22 +46,13 @@ public class ProprietarioController {
     @ResponseBody
     public ResponseEntity<Proprietario> atualizar(@PathVariable Long id, @RequestBody Proprietario proprietario){
         Proprietario proprietarioAtualizado = proprietarioService.atualizar(id, proprietario);
-        if (proprietarioAtualizado != null) {
-            return ResponseEntity.ok(proprietarioAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(proprietarioAtualizado);
     }
 
     @DeleteMapping("/proprietarios/{id}")
     @ResponseBody
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        Optional<Proprietario> proprietario = proprietarioService.buscarId(id);
-        if(proprietario.isPresent()){
             proprietarioService.deletarId(id);
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 }

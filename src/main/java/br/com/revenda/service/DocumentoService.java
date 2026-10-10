@@ -1,12 +1,13 @@
 package br.com.revenda.service;
 
+import br.com.revenda.exception.DadosInvalidosException;
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Documento;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.DocumentoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DocumentoService {
@@ -20,49 +21,57 @@ public class DocumentoService {
     }
 
     public Documento salvar(Documento documento) {
-        if (documento.getVeiculo() != null){
-            Optional<Veiculo> veiculoExistente =
+        if (documento.getVeiculo() != null) {
+            Veiculo veiculoExistente =
                     veiculoService.buscarId(
                             documento.getVeiculo().getIdVeiculo()
                     );
-            if(veiculoExistente.isPresent()){
-                documento.setVeiculo(veiculoExistente.get());
-                return documentoRepository.save(documento);
-            }
+            documento.setVeiculo(veiculoExistente);
+            return documentoRepository.save(documento);
+
+        } else {
+            throw new DadosInvalidosException("Veiculo é obrigatorio");
         }
-        return null;
     }
 
     public List<Documento> mostrarTodos() {
         return documentoRepository.findAll();
     }
 
-    public Optional<Documento> buscarId(Long id) {
-        return documentoRepository.findById(id);
+    public Documento buscarId(Long id) {
+        return documentoRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Documento não encontrado"));
     }
 
     public void deletarId(Long id) {
-        documentoRepository.deleteById(id);
-    }
-
-    public Documento atualizar(Long id, Documento novosDados){
-        Optional<Documento> documentoExistente = documentoRepository.findById(id);
-        if(documentoExistente.isPresent()){
-            Documento documento = documentoExistente.get();
-            if (novosDados.getVeiculo() != null){
-                Optional<Veiculo> veiculoExistente = veiculoService.buscarId(
-                    novosDados.getVeiculo().getIdVeiculo()
-                );
-                if(veiculoExistente.isPresent()){
-                    documento.setVeiculo(veiculoExistente.get());
-                    documento.setCaminhoArquivo(novosDados.getCaminhoArquivo());
-                    documento.setNome(novosDados.getNome());
-                    documento.setTipoDocumento(novosDados.getTipoDocumento());
-                    return documentoRepository.save(documento);
-                }
-
-            }
+        if (documentoRepository.existsById(id)) {
+            documentoRepository.deleteById(id);
+        } else {
+            throw new RecursoNaoEncontradoException("Documento nao encontrado");
         }
-        return null;
     }
+
+    public Documento atualizar(Long id, Documento novosDados) {
+
+        Documento documento = documentoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Documento não encontrado")
+                );
+
+        if (novosDados.getVeiculo() == null) {
+            throw new DadosInvalidosException("Veiculo é obrigatorio");
+        }
+
+        Veiculo veiculoExiste =
+                veiculoService.buscarId(
+                        novosDados.getVeiculo().getIdVeiculo()
+                );
+
+        documento.setVeiculo(veiculoExiste);
+        documento.setCaminhoArquivo(novosDados.getCaminhoArquivo());
+        documento.setNome(novosDados.getNome());
+        documento.setTipoDocumento(novosDados.getTipoDocumento());
+        return documentoRepository.save(documento);
+    }
+
+
 }

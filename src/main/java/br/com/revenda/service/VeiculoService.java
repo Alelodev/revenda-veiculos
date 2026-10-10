@@ -1,12 +1,13 @@
 package br.com.revenda.service;
 
+import br.com.revenda.exception.DadosInvalidosException;
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Proprietario;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.VeiculoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VeiculoService {
@@ -21,18 +22,16 @@ public class VeiculoService {
 
     public Veiculo salvar(Veiculo veiculo) {
         if (veiculo.getProprietario() != null) {
-            Optional<Proprietario> proprietarioExistente =
+            Proprietario proprietarioExistente =
                     proprietarioService.buscarId(
                             veiculo.getProprietario().getIdProprietario()
                     );
-            if (proprietarioExistente.isPresent()) {
-                veiculo.setProprietario(proprietarioExistente.get());
-                return veiculoRepository.save(veiculo);
-            } else {
-                return null;
-            }
+
+            veiculo.setProprietario(proprietarioExistente);
+            return veiculoRepository.save(veiculo);
+
         } else {
-            return null;
+            throw new DadosInvalidosException("Proprietário é obrigatório");
         }
     }
 
@@ -40,50 +39,52 @@ public class VeiculoService {
         return veiculoRepository.findAll();
     }
 
-    public Optional<Veiculo> buscarId(Long id) {
-        return veiculoRepository.findById(id);
+    public Veiculo buscarId(Long id) {
+        return veiculoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Veiculo nao encontrado")
+                );
     }
 
     public void deletarId(Long id) {
-        veiculoRepository.deleteById(id);
+        if (veiculoRepository.existsById(id)) {
+            veiculoRepository.deleteById(id);
+        } else {
+            throw new RecursoNaoEncontradoException("Veiculo nao encontrado");
+        }
+
     }
 
     public Veiculo atualizar(Long id, Veiculo novosDados) {
-        Optional<Veiculo> veiculoExistente = veiculoRepository.findById(id);
-        if (veiculoExistente.isPresent()) {
-            Veiculo veiculo = veiculoExistente.get();
 
-            if (novosDados.getProprietario() != null) {
-                Optional<Proprietario> proprietarioExistente =
-                        proprietarioService.buscarId(
-                                novosDados.getProprietario().getIdProprietario()
-                        );
-                if (proprietarioExistente.isPresent()) {
-                    veiculo.setProprietario(proprietarioExistente.get());
-                    veiculo.setAnoFabricacao(novosDados.getAnoFabricacao());
-                    veiculo.setAnoModelo(novosDados.getAnoModelo());
-                    veiculo.setChassi(novosDados.getChassi());
-                    veiculo.setCor(novosDados.getCor());
-                    veiculo.setMarca(novosDados.getMarca());
-                    veiculo.setPlaca(novosDados.getPlaca());
-                    veiculo.setModelo(novosDados.getModelo());
-                    veiculo.setTipoCombustivel(novosDados.getTipoCombustivel());
-                    veiculo.setRenavam(novosDados.getRenavam());
-                    veiculo.setQuilometragem(novosDados.getQuilometragem());
-                    veiculo.setValorCompra(novosDados.getValorCompra());
-                    veiculo.setValorVenda(novosDados.getValorVenda());
-                    veiculo.setStatus(novosDados.getStatus());
-                    return veiculoRepository.save(veiculo);
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
+        Veiculo veiculo = veiculoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Veículo não encontrado")
+                );
 
-
-            }
+        if (novosDados.getProprietario() == null) {
+            throw new DadosInvalidosException("Proprietário é obrigatório");
         }
 
-        return null;
+        Proprietario proprietarioExistente =
+                proprietarioService.buscarId(
+                        novosDados.getProprietario().getIdProprietario()
+                );
+
+        veiculo.setProprietario(proprietarioExistente);
+        veiculo.setAnoFabricacao(novosDados.getAnoFabricacao());
+        veiculo.setAnoModelo(novosDados.getAnoModelo());
+        veiculo.setChassi(novosDados.getChassi());
+        veiculo.setCor(novosDados.getCor());
+        veiculo.setMarca(novosDados.getMarca());
+        veiculo.setPlaca(novosDados.getPlaca());
+        veiculo.setModelo(novosDados.getModelo());
+        veiculo.setTipoCombustivel(novosDados.getTipoCombustivel());
+        veiculo.setRenavam(novosDados.getRenavam());
+        veiculo.setQuilometragem(novosDados.getQuilometragem());
+        veiculo.setValorCompra(novosDados.getValorCompra());
+        veiculo.setValorVenda(novosDados.getValorVenda());
+        veiculo.setStatus(novosDados.getStatus());
+        return veiculoRepository.save(veiculo);
     }
 }

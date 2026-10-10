@@ -1,5 +1,6 @@
 package br.com.revenda.service;
 
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Usuario;
 import br.com.revenda.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,19 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Optional<Usuario> buscarId(Long id) {
-        return usuarioRepository.findById(id);
+    public Usuario buscarId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Usuário não encontrado")
+                );
     }
 
     public void deletarId(Long id) {
-        usuarioRepository.deleteById(id);
+        if (usuarioRepository.existsById(id)) {
+            usuarioRepository.deleteById(id);
+        } else {
+            throw new RecursoNaoEncontradoException("Usuário não encontrado");
+        }
     }
 
     public Usuario atualizar(Long id, Usuario novosDados) {
@@ -41,7 +49,7 @@ public class UsuarioService {
             usuario.setSenha(novosDados.getSenha());
             return usuarioRepository.save(usuario);
         }
-        return null;
+         throw new RecursoNaoEncontradoException("Usuário não encontrado");
     }
 
 }

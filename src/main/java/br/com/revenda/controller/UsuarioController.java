@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class UsuarioController {
@@ -20,25 +19,21 @@ public class UsuarioController {
 
     @GetMapping("/usuarios")
     @ResponseBody
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
         List<Usuario> mostrarUsuarios = usuarioService.mostrarTodos();
         return ResponseEntity.ok(mostrarUsuarios);
     }
 
     @GetMapping("/usuarios/{id}")
     @ResponseBody
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id){
-        Optional<Usuario> usuario = usuarioService.buscarId(id);
-        if (usuario.isPresent()) {
-            return  ResponseEntity.ok(usuario.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
+        Usuario usuario = usuarioService.buscarId(id);
+        return ResponseEntity.ok(usuario);
     }
 
     @PostMapping("/usuarios")
     @ResponseBody
-    public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario) {
         Usuario usuarioSalvo = usuarioService.salvar(usuario);
 
         return ResponseEntity.status(201).body(usuarioSalvo);
@@ -46,25 +41,16 @@ public class UsuarioController {
 
     @PutMapping("/usuarios/{id}")
     @ResponseBody
-    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario usuarioAtualizado = usuarioService.atualizar(id, usuario);
-        if (usuarioAtualizado != null) {
-            return ResponseEntity.ok(usuarioAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @DeleteMapping("/usuarios/{id}")
     @ResponseBody
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
-        Optional<Usuario> usuario = usuarioService.buscarId(id);
-
-        if(usuario.isPresent()){
-            usuarioService.deletarId(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        usuarioService.deletarId(id);
+        return ResponseEntity.noContent().build();
     }
 }
+
