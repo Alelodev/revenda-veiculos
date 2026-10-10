@@ -2,6 +2,7 @@ package br.com.revenda.controller;
 
 import br.com.revenda.model.Documento;
 import br.com.revenda.service.DocumentoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class DocumentoController {
 
     @PostMapping("/documentos")
     @ResponseBody
-    public ResponseEntity<Documento> cadastrar(@RequestBody Documento documento) {
+    public ResponseEntity<Documento> cadastrar(@Valid @RequestBody Documento documento) {
         Documento documentoSalvo = documentoService.salvar(documento);
 
         return ResponseEntity.status(201).body(documentoSalvo);
@@ -42,7 +43,7 @@ public class DocumentoController {
 
     @PutMapping("/documentos/{id}")
     @ResponseBody
-    public ResponseEntity<Documento> atualizar(@PathVariable Long id, @RequestBody Documento documento) {
+    public ResponseEntity<Documento> atualizar(@PathVariable Long id, @Valid @RequestBody Documento documento) {
         Documento documentoAtualizado = documentoService.atualizar(id, documento);
         return ResponseEntity.ok(documentoAtualizado);
 

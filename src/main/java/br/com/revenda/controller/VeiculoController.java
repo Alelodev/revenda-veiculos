@@ -2,6 +2,7 @@ package br.com.revenda.controller;
 
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.service.VeiculoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class VeiculoController {
 
     @PostMapping("/veiculos")
     @ResponseBody
-    public ResponseEntity<Veiculo> cadastrar(@RequestBody Veiculo veiculo) {
+    public ResponseEntity<Veiculo> cadastrar(@Valid @RequestBody Veiculo veiculo) {
         Veiculo veiculoSalvo = veiculoService.salvar(veiculo);
 
         return ResponseEntity.status(201).body(veiculoSalvo);
@@ -42,7 +43,7 @@ public class VeiculoController {
 
     @PutMapping("/veiculos/{id}")
     @ResponseBody
-    public ResponseEntity<Veiculo> atualizar(@PathVariable Long id, @RequestBody Veiculo veiculo) {
+    public ResponseEntity<Veiculo> atualizar(@PathVariable Long id, @Valid @RequestBody Veiculo veiculo) {
         Veiculo veiculoAtualizado = veiculoService.atualizar(id, veiculo);
         return ResponseEntity.ok(veiculoAtualizado);
 

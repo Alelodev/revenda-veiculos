@@ -1,6 +1,7 @@
 package br.com.revenda.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Usuario {
@@ -11,9 +12,11 @@ public class Usuario {
     private Long idUsuario;
 
     @Column(name = "login", nullable = false, unique = true)
+    @NotBlank(message = "Login é obrigatorio!")
     private String login;
 
     @Column(name = "senha", nullable = false)
+    @NotBlank(message = "Senha é obrigatoria!")
     private String senha;
 
     public Long getIdUsuario() {

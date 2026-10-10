@@ -1,6 +1,8 @@
 package br.com.revenda.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -13,15 +15,19 @@ public class Documento {
 
     @ManyToOne
     @JoinColumn(name = "id_veiculo")
+    @NotNull(message = "Veículo é obrigatório")
     private Veiculo veiculo;
 
     @Column(name = "nome", nullable = false)
+    @NotBlank(message = "Nome do documento é obrigatório")
     private String nome;
 
     @Column(name = "tipo_documento", nullable = false)
+    @NotBlank(message = "Tipo do documento é obrigatório")
     private String tipoDocumento;
 
     @Column(name = "caminho_arquivo", nullable = false)
+    @NotBlank(message = "Caminho do arquivo é obrigatório")
     private String caminhoArquivo;
 
     @Column(name = "data_upload", nullable = false, insertable = false, updatable = false)

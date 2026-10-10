@@ -1,6 +1,8 @@
 package br.com.revenda.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Proprietario {
@@ -10,10 +12,11 @@ public class Proprietario {
     @Column(name = "id_proprietario", nullable = false)
     private Long idProprietario;
 
-
     @Column(name = "nome_completo", nullable = false, length = 150)
+    @NotBlank(message = "Nome é obrigatorio")
     private String nomeCompleto;
     @Column(name = "cpf", nullable = false, unique = true, length = 11)
+    @NotBlank(message = "CPF è obrigatorio")
     private String cpf;
 
     @Column(name = "telefone", length = 20)
@@ -21,6 +24,7 @@ public class Proprietario {
     @Column(name = "endereco", length = 255)
     private String endereco;
     @Column(name = "email", length = 150)
+    @Email(message = "Email invalido")
     private String email;
     @Column(name = "cnh", length = 20)
     private String cnh;

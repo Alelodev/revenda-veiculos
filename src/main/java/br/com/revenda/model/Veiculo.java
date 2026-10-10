@@ -1,6 +1,8 @@
 package br.com.revenda.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
@@ -14,12 +16,15 @@ public class Veiculo {
 
     @ManyToOne
     @JoinColumn(name = "id_proprietario")
+    @NotNull(message = "Proprietario é obrigatorio")
     private Proprietario proprietario;
 
     @Column(name = "marca", nullable = false)
+    @NotBlank(message = "Marca é obrigatória")
     private String marca;
 
     @Column(name = "modelo", nullable = false)
+    @NotBlank(message = "Modelo é obrigatório")
     private String modelo;
 
     @Column(name = "ano_fabricacao")
@@ -29,6 +34,7 @@ public class Veiculo {
     private Integer anoModelo;
 
     @Column(name = "placa", nullable = false, unique = true)
+    @NotBlank(message = "Placa é obrigatória")
     private String placa;
 
     @Column(name = "cor")
