@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Veículos</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Veículos cadastrados</h1>
+
+<a href="/">
+    Início
+</a>
+
+|
+
+<a href="/veiculos/novo">
+    Cadastrar novo veículo
+</a>
+
+
+<p th:if="${sucesso}" th:text="${sucesso}" role="status"
+   style="color: #146c2e;"></p>
+<p th:if="${erro}" th:text="${erro}" role="alert"
+   style="color: #b00020;"></p>
+<table>
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Placa</th>
+        <th>Ano</th>
+        <th>Cor</th>
+        <th>Status</th>
+        <th>Documentos</th>
+        <th>Ações</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr th:each="veiculo : ${veiculos}">
+
+        <td th:text="${veiculo.idVeiculo}"></td>
+
+        <td th:text="${veiculo.marca}"></td>
+
+        <td th:text="${veiculo.modelo}"></td>
+
+        <td th:text="${veiculo.placa}"></td>
+
+        <td th:text="${veiculo.anoModelo}"></td>
+
+        <td th:text="${veiculo.cor}"></td>
+
+        <td th:text="${veiculo.status}"></td>
+
+        <td>
+            <a th:href="@{/veiculos/{id}/documentos(id=${veiculo.idVeiculo})}">
+                Ver documentos
+            </a>
+        </td>
+
+        <td>
+            <form th:action="@{/veiculos/{id}/excluir(id=${veiculo.idVeiculo})}"
+                  method="post"
+                  onsubmit="return confirm('Deseja excluir este cadastro? Esta ação não pode ser desfeita.');">
+                <button type="submit">Excluir</button>
+            </form>
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+</body>
+
+</html>

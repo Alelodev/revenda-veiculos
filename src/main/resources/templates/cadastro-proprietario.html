@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Cadastrar proprietário</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            width: 350px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Cadastrar proprietário</h1>
+
+<form action="/proprietarios/form"
+      method="post">
+
+    <label>
+        Nome completo
+    </label>
+
+    <input type="text"
+           name="nomeCompleto"
+           required>
+
+    <label>
+        CPF
+    </label>
+
+    <input type="text"
+           name="cpf"
+           maxlength="11"
+           required>
+
+    <label>
+        Telefone
+    </label>
+
+    <input type="text"
+           name="telefone">
+
+    <label>
+        Endereço
+    </label>
+
+    <input type="text"
+           name="endereco">
+
+    <label>
+        Email
+    </label>
+
+    <input type="email"
+           name="email">
+
+    <label>
+        CNH
+    </label>
+
+    <input type="text"
+           name="cnh">
+
+    <button type="submit">
+        Cadastrar
+    </button>
+
+</form>
+
+<br>
+
+<a href="/proprietarios/tela">
+    Voltar
+</a>
+
+</body>
+
+</html>

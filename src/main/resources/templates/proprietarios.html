@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Proprietários</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Proprietários</h1>
+
+<a href="/">
+    Início
+</a>
+
+|
+
+<a href="/proprietarios/novo">
+    Cadastrar proprietário
+</a>
+
+
+<p th:if="${sucesso}" th:text="${sucesso}" role="status"
+   style="color: #146c2e;"></p>
+<p th:if="${erro}" th:text="${erro}" role="alert"
+   style="color: #b00020;"></p>
+<table>
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Nome completo</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>Endereço</th>
+        <th>Email</th>
+        <th>CNH</th>
+        <th>Ações</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr th:each="proprietario : ${proprietarios}">
+
+        <td th:text="${proprietario.idProprietario}"></td>
+
+        <td th:text="${proprietario.nomeCompleto}"></td>
+
+        <td th:text="${proprietario.cpf}"></td>
+
+        <td th:text="${proprietario.telefone}"></td>
+
+        <td th:text="${proprietario.endereco}"></td>
+
+        <td th:text="${proprietario.email}"></td>
+
+        <td th:text="${proprietario.cnh}"></td>
+
+        <td>
+            <form th:action="@{/proprietarios/{id}/excluir(id=${proprietario.idProprietario})}"
+                  method="post"
+                  onsubmit="return confirm('Deseja excluir este cadastro? Esta ação não pode ser desfeita.');">
+                <button type="submit">Excluir</button>
+            </form>
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+</body>
+
+</html>

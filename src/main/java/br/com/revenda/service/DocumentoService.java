@@ -125,4 +125,8 @@ public class DocumentoService {
 
         return recurso;
     }
+
+    public List<Documento> buscarPorVeiculo(Long idVeiculo) {
+        return documentoRepository.findByVeiculoIdVeiculo(idVeiculo);
+    }
 }

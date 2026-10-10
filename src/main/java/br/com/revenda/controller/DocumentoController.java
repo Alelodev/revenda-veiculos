@@ -8,6 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,5 +107,50 @@ public class DocumentoController {
                 )
                 .contentType(MediaType.parseMediaType(tipoConteudo))
                 .body(recurso);
+    }
+
+    @PostMapping("/documentos/upload-form")
+    public String uploadFormulario(
+            @RequestParam("arquivo") MultipartFile arquivo,
+            @RequestParam("idVeiculo") Long idVeiculo,
+            @RequestParam("tipoDocumento") String tipoDocumento
+    ) throws IOException {
+
+        documentoService.salvarArquivo(
+                arquivo,
+                idVeiculo,
+                tipoDocumento
+        );
+
+        return "redirect:/veiculos/" + idVeiculo + "/documentos";
+    }
+
+    @PostMapping("/veiculos/{idVeiculo}/documentos/{idDocumento}/excluir")
+    public String excluirFormulario(
+            @PathVariable Long idVeiculo,
+            @PathVariable Long idDocumento,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            Documento documento = documentoService.buscarId(idDocumento);
+            if (documento.getVeiculo() == null
+                    || !idVeiculo.equals(documento.getVeiculo().getIdVeiculo())) {
+                redirectAttributes.addFlashAttribute(
+                        "erro", "Este documento não pertence ao veículo informado."
+                );
+            } else {
+                documentoService.deletarId(idDocumento);
+                redirectAttributes.addFlashAttribute(
+                        "sucesso", "Registro do documento excluído com sucesso."
+                );
+            }
+        } catch (RecursoNaoEncontradoException exception) {
+            redirectAttributes.addFlashAttribute("erro", "Documento não encontrado.");
+        } catch (DataIntegrityViolationException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "erro", "Não foi possível excluir o documento devido a vínculos no banco."
+            );
+        }
+        return "redirect:/veiculos/" + idVeiculo + "/documentos";
     }
 }

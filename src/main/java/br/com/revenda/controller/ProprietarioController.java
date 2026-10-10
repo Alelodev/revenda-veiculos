@@ -5,7 +5,12 @@ import br.com.revenda.service.ProprietarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -54,4 +59,52 @@ public class ProprietarioController {
         proprietarioService.deletarId(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/proprietarios/tela")
+    public String telaProprietarios(Model model) {
+
+        model.addAttribute(
+                "proprietarios",
+                proprietarioService.mostrarTodos()
+        );
+
+        return "proprietarios";
+    }
+
+    @GetMapping("/proprietarios/novo")
+    public String novoProprietario() {
+        return "cadastro-proprietario";
+    }
+
+    @PostMapping("/proprietarios/form")
+    public String cadastrarFormulario(
+            @ModelAttribute Proprietario proprietario
+    ) {
+
+        proprietarioService.salvar(proprietario);
+
+        return "redirect:/proprietarios/tela";
+    }
+
+
+
+    @PostMapping("/proprietarios/{id}/excluir")
+    public String excluirFormulario(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            proprietarioService.deletarId(id);
+            redirectAttributes.addFlashAttribute("sucesso", "Cadastro excluído com sucesso.");
+        } catch (RecursoNaoEncontradoException exception) {
+            redirectAttributes.addFlashAttribute("erro", "O proprietário não foi encontrado.");
+        } catch (DataIntegrityViolationException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "erro",
+                    "Não foi possível excluir o proprietário. Verifique se existem veículos vinculados."
+            );
+        }
+        return "redirect:/proprietarios/tela";
+    }
 }
+
