@@ -5,9 +5,17 @@ import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Documento;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.DocumentoRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DocumentoService {
@@ -73,5 +81,48 @@ public class DocumentoService {
         return documentoRepository.save(documento);
     }
 
+    public Documento salvarArquivo(MultipartFile arquivo, Long idVeiculo, String tipoDocumento) throws IOException {
+        if (arquivo.isEmpty()) {
+            throw new DadosInvalidosException("Arquivo é obrigatório");
+        }
+        Veiculo veiculo = veiculoService.buscarId(idVeiculo);
+        Path pasta = Path.of(
+                "uploads",
+                "veiculos",
+                idVeiculo.toString()
+        );
+        Files.createDirectories(pasta);
+        String nomeOriginal = arquivo.getOriginalFilename();
 
+        String nomeArquivo = UUID.randomUUID() + "_" + nomeOriginal;
+
+        Path destino = pasta.resolve(nomeArquivo);
+        Files.copy(
+                arquivo.getInputStream(),
+                destino
+        );
+        Documento documento = new Documento();
+
+        documento.setVeiculo(veiculo);
+        documento.setNome(nomeOriginal);
+        documento.setTipoDocumento(tipoDocumento);
+        documento.setCaminhoArquivo(destino.toString());
+
+        return documentoRepository.save(documento);
+    }
+
+    public Resource baixarArquivo(Long idDocumento) throws MalformedURLException {
+
+        Documento documento = buscarId(idDocumento);
+
+        Path caminho = Path.of(documento.getCaminhoArquivo());
+
+        Resource recurso = new UrlResource(caminho.toUri());
+
+        if (!recurso.exists()) {
+            throw new RecursoNaoEncontradoException("Arquivo não encontrado");
+        }
+
+        return recurso;
+    }
 }
