@@ -125,9 +125,13 @@
 
 <h2>Enviar novo documento</h2>
 
-<form action="/documentos/upload-form"
+<form th:action="@{/documentos/upload-form}"
       method="post"
       enctype="multipart/form-data">
+
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
 
     <input type="hidden"
            name="idVeiculo"
@@ -198,7 +202,7 @@
 
 <br>
 
-<a href="/veiculos/tela">
+<a th:href="@{/veiculos/tela}">
     Voltar para veículos
 </a>
 

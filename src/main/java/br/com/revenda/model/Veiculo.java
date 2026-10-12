@@ -19,6 +19,12 @@ public class Veiculo {
     @NotNull(message = "Proprietario é obrigatorio")
     private Proprietario proprietario;
 
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
     @Column(name = "marca", nullable = false)
     @NotBlank(message = "Marca é obrigatória")
     private String marca;
@@ -60,6 +66,14 @@ public class Veiculo {
 
     @Column(name = "status")
     private String status;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public Proprietario getProprietario() {
         return proprietario;

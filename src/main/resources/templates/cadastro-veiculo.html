@@ -47,9 +47,10 @@
 
 <h1>Cadastrar veículo</h1>
 
-<form action="/veiculos/form"
-      method="post"
-      onsubmit="prepararMarca()">
+<form th:action="@{/veiculos/form}" method="post" onsubmit="prepararMarca()">
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
 
     <label>
         Proprietário
@@ -248,7 +249,7 @@
 
 <br>
 
-<a href="/veiculos/tela">
+<a th:href="@{/veiculos/tela}">
     Voltar
 </a>
 

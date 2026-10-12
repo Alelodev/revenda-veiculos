@@ -87,4 +87,8 @@ public class VeiculoService {
         veiculo.setStatus(novosDados.getStatus());
         return veiculoRepository.save(veiculo);
     }
+
+    public List<Veiculo> buscarPorUsuario(Long idUsuario) {
+        return veiculoRepository.findByUsuarioIdUsuario(idUsuario);
+    }
 }

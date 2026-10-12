@@ -63,5 +63,13 @@ public class UsuarioService {
          throw new RecursoNaoEncontradoException("Usuário não encontrado");
     }
 
+    public Usuario buscarPorLogin(String login) {
+        return usuarioRepository
+                .findByLogin(login)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Usuário não encontrado")
+                );
+    }
+
 }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -24,15 +24,15 @@
 
 <h1>Sistema de Revenda de Veículos</h1>
 
-<a href="/veiculos/tela">Veículos</a>
+<a th:href="@{/veiculos/tela}">Veículos</a>
 
-<a href="/proprietarios/tela">Proprietários</a>
+<a th:href="@{/proprietarios/tela}">Proprietários</a>
 
-<a href="/veiculos/novo">Cadastrar veículo</a>
+<a th:href="@{/veiculos/novo}">Cadastrar veículo</a>
 
-<a href="/proprietarios/novo">Cadastrar proprietário</a>
+<a th:href="@{/proprietarios/novo}">Cadastrar proprietário</a>
 
-<a href="/cadastro">
+<a th:href="@{/cadastro}">
     Cadastrar usuário
 </a>
 

@@ -43,16 +43,19 @@
 
 <h1>Veículos cadastrados</h1>
 
-<a href="/">
+<a th:href="@{/principal}">
     Início
 </a>
 
 |
 
-<a href="/veiculos/novo">
+<a th:href="@{/veiculos/novo}">
     Cadastrar novo veículo
 </a>
 
+<form th:action="@{/logout}" method="post" style="display: inline-block; margin-left: 15px;">
+    <button type="submit">Sair</button>
+</form>
 
 <p th:if="${sucesso}" th:text="${sucesso}" role="status"
    style="color: #146c2e;"></p>
@@ -105,11 +108,6 @@
                   method="post"
                   onsubmit="return confirm('Deseja excluir este cadastro? Esta ação não pode ser desfeita.');">
                 <button type="submit">Excluir</button>
-            </form>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit">
-                    Sair
-                </button>
             </form>
         </td>
     </tr>
