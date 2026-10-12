@@ -3,6 +3,7 @@ package br.com.revenda.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
@@ -55,12 +56,15 @@ public class Veiculo {
     @Column(name = "chassi")
     private String chassi;
 
+    @PositiveOrZero(message = "Quilometragem não pode ser negativa")
     @Column(name = "quilometragem")
     private Integer quilometragem;
 
+    @PositiveOrZero(message = "Valor de compra não pode ser negativo")
     @Column(name = "valor_compra")
     private BigDecimal valorCompra;
 
+    @PositiveOrZero(message = "Valor de venda não pode ser negativo")
     @Column(name = "valor_venda")
     private BigDecimal valorVenda;
 

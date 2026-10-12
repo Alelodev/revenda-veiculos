@@ -22,18 +22,35 @@ public class VeiculoService {
     }
 
     public Veiculo salvar(Veiculo veiculo) {
+
+        String placaNormalizada =
+                veiculo.getPlaca()
+                        .trim()
+                        .toUpperCase();
+
+        veiculo.setPlaca(placaNormalizada);
+
+        if (veiculoRepository.existsByPlaca(veiculo.getPlaca())) {
+            throw new DadosInvalidosException(
+                    "Já existe um veículo cadastrado com essa placa."
+            );
+        }
+
         if (veiculo.getProprietario() != null) {
+
             Proprietario proprietarioExistente =
                     proprietarioService.buscarId(
                             veiculo.getProprietario().getIdProprietario()
                     );
 
             veiculo.setProprietario(proprietarioExistente);
-            return veiculoRepository.save(veiculo);
 
-        } else {
-            throw new DadosInvalidosException("Proprietário é obrigatório");
+            return veiculoRepository.save(veiculo);
         }
+
+        throw new DadosInvalidosException(
+                "Proprietário é obrigatório"
+        );
     }
 
     public List<Veiculo> mostrarTodos() {

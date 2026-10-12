@@ -47,14 +47,18 @@
 
 <h1>Cadastrar veículo</h1>
 
-<form th:action="@{/veiculos/form}" method="post" onsubmit="prepararMarca()">
+<form th:action="@{/veiculos/form}"
+      method="post"
+      onsubmit="prepararCampos()">
+
     <input type="hidden"
            th:name="${_csrf.parameterName}"
            th:value="${_csrf.token}">
 
-    <label>
-        Proprietário
-    </label>
+
+    <!-- PROPRIETÁRIO -->
+
+    <label>Proprietário</label>
 
     <select name="proprietario.idProprietario"
             required>
@@ -70,53 +74,25 @@
 
     </select>
 
+
+    <!-- MARCA -->
+
     <label>Marca</label>
 
     <select id="marca" required>
 
-        <option value="">
-            Selecione
-        </option>
+        <option value="">Selecione</option>
 
-        <option value="Toyota">
-            Toyota
-        </option>
-
-        <option value="Honda">
-            Honda
-        </option>
-
-        <option value="Volkswagen">
-            Volkswagen
-        </option>
-
-        <option value="Fiat">
-            Fiat
-        </option>
-
-        <option value="Chevrolet">
-            Chevrolet
-        </option>
-
-        <option value="Ford">
-            Ford
-        </option>
-
-        <option value="Hyundai">
-            Hyundai
-        </option>
-
-        <option value="Renault">
-            Renault
-        </option>
-
-        <option value="Jeep">
-            Jeep
-        </option>
-
-        <option value="Nissan">
-            Nissan
-        </option>
+        <option value="Toyota">Toyota</option>
+        <option value="Honda">Honda</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Ford">Ford</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Renault">Renault</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Nissan">Nissan</option>
 
         <option value="OUTRA">
             Outra
@@ -131,99 +107,184 @@
     <div id="campoOutraMarca"
          style="display: none;">
 
-        <label>
-            Digite a marca
-        </label>
+        <label>Digite a marca</label>
 
         <input type="text"
                id="outraMarca">
 
     </div>
 
-    <label>
-        Modelo
-    </label>
+
+    <!-- MODELO -->
+
+    <label>Modelo</label>
 
     <input type="text"
            name="modelo"
            required>
 
-    <label>
-        Ano de fabricação
-    </label>
+
+    <!-- ANO FABRICAÇÃO -->
+
+    <label>Ano de fabricação</label>
 
     <input type="number"
-           name="anoFabricacao">
+           name="anoFabricacao"
+           min="1900"
+           max="2100">
 
-    <label>
-        Ano modelo
-    </label>
+
+    <!-- ANO MODELO -->
+
+    <label>Ano modelo</label>
 
     <input type="number"
-           name="anoModelo">
+           name="anoModelo"
+           min="1900"
+           max="2100">
 
-    <label>
-        Placa
-    </label>
+
+    <!-- PLACA -->
+
+    <label>Placa</label>
 
     <input type="text"
            name="placa"
+           maxlength="8"
            required>
 
-    <label>
-        Cor
-    </label>
 
-    <input type="text"
-           name="cor">
+    <!-- COR -->
 
-    <label>
-        Tipo de combustível
-    </label>
+    <label>Cor</label>
 
-    <input type="text"
-           name="tipoCombustivel">
+    <select id="cor">
 
-    <label>
-        RENAVAM
-    </label>
+        <option value="">
+            Selecione
+        </option>
+
+        <option value="Branco">Branco</option>
+        <option value="Preto">Preto</option>
+        <option value="Prata">Prata</option>
+        <option value="Cinza">Cinza</option>
+        <option value="Vermelho">Vermelho</option>
+        <option value="Azul">Azul</option>
+        <option value="Verde">Verde</option>
+        <option value="Amarelo">Amarelo</option>
+        <option value="Marrom">Marrom</option>
+        <option value="Bege">Bege</option>
+        <option value="Laranja">Laranja</option>
+        <option value="Roxo">Roxo</option>
+
+        <option value="OUTRA">
+            Outra
+        </option>
+
+    </select>
+
+    <input type="hidden"
+           name="cor"
+           id="corFinal">
+
+    <div id="campoOutraCor"
+         style="display: none;">
+
+        <label>Digite a cor</label>
+
+        <input type="text"
+               id="outraCor">
+
+    </div>
+
+
+    <!-- COMBUSTÍVEL -->
+
+    <label>Tipo de combustível</label>
+
+    <select id="tipoCombustivel">
+
+        <option value="">
+            Selecione
+        </option>
+
+        <option value="Gasolina">Gasolina</option>
+        <option value="Etanol">Etanol</option>
+        <option value="Flex">Flex</option>
+        <option value="Diesel">Diesel</option>
+        <option value="GNV">GNV</option>
+        <option value="Elétrico">Elétrico</option>
+        <option value="Híbrido">Híbrido</option>
+
+        <option value="OUTRO">
+            Outro
+        </option>
+
+    </select>
+
+    <input type="hidden"
+           name="tipoCombustivel"
+           id="tipoCombustivelFinal">
+
+    <div id="campoOutroCombustivel"
+         style="display: none;">
+
+        <label>Digite o tipo de combustível</label>
+
+        <input type="text"
+               id="outroCombustivel">
+
+    </div>
+
+
+    <!-- RENAVAM -->
+
+    <label>RENAVAM</label>
 
     <input type="text"
            name="renavam">
 
-    <label>
-        Chassi
-    </label>
+
+    <!-- CHASSI -->
+
+    <label>Chassi</label>
 
     <input type="text"
            name="chassi">
 
-    <label>
-        Quilometragem
-    </label>
+
+    <!-- QUILOMETRAGEM -->
+
+    <label>Quilometragem</label>
 
     <input type="number"
-           name="quilometragem">
+           name="quilometragem"
+           min="0">
 
-    <label>
-        Valor de compra
-    </label>
+
+    <!-- VALOR COMPRA -->
+
+    <label>Valor de compra</label>
 
     <input type="number"
            step="0.01"
+           min="0"
            name="valorCompra">
 
-    <label>
-        Valor de venda
-    </label>
+
+    <!-- VALOR VENDA -->
+
+    <label>Valor de venda</label>
 
     <input type="number"
            step="0.01"
+           min="0"
            name="valorVenda">
 
-    <label>
-        Status
-    </label>
+
+    <!-- STATUS -->
+
+    <label>Status</label>
 
     <select name="status">
 
@@ -241,6 +302,7 @@
 
     </select>
 
+
     <button type="submit">
         Cadastrar
     </button>
@@ -253,35 +315,209 @@
     Voltar
 </a>
 
+
 <script>
-    const marcaSelect = document.getElementById("marca");
-    const campoOutraMarca = document.getElementById("campoOutraMarca");
-    const outraMarca = document.getElementById("outraMarca");
 
-    marcaSelect.addEventListener("change", function () {
+    // =====================================================
+    // MARCA
+    // =====================================================
 
-        if (marcaSelect.value === "OUTRA") {
-            campoOutraMarca.style.display = "block";
-            outraMarca.required = true;
+    const marcaSelect =
+        document.getElementById("marca");
+
+    const campoOutraMarca =
+        document.getElementById("campoOutraMarca");
+
+    const outraMarca =
+        document.getElementById("outraMarca");
+
+
+    marcaSelect.addEventListener(
+        "change",
+        function () {
+
+            if (marcaSelect.value === "OUTRA") {
+
+                campoOutraMarca.style.display =
+                    "block";
+
+                outraMarca.required = true;
+
+            } else {
+
+                campoOutraMarca.style.display =
+                    "none";
+
+                outraMarca.required = false;
+
+                outraMarca.value = "";
+            }
+        }
+    );
+
+
+    // =====================================================
+    // COR
+    // =====================================================
+
+    const corSelect =
+        document.getElementById("cor");
+
+    const campoOutraCor =
+        document.getElementById("campoOutraCor");
+
+    const outraCor =
+        document.getElementById("outraCor");
+
+
+    corSelect.addEventListener(
+        "change",
+        function () {
+
+            if (corSelect.value === "OUTRA") {
+
+                campoOutraCor.style.display =
+                    "block";
+
+                outraCor.required = true;
+
+            } else {
+
+                campoOutraCor.style.display =
+                    "none";
+
+                outraCor.required = false;
+
+                outraCor.value = "";
+            }
+        }
+    );
+
+
+    // =====================================================
+    // COMBUSTÍVEL
+    // =====================================================
+
+    const combustivelSelect =
+        document.getElementById(
+            "tipoCombustivel"
+        );
+
+    const campoOutroCombustivel =
+        document.getElementById(
+            "campoOutroCombustivel"
+        );
+
+    const outroCombustivel =
+        document.getElementById(
+            "outroCombustivel"
+        );
+
+
+    combustivelSelect.addEventListener(
+        "change",
+        function () {
+
+            if (
+                combustivelSelect.value ===
+                "OUTRO"
+            ) {
+
+                campoOutroCombustivel
+                    .style
+                    .display = "block";
+
+                outroCombustivel.required =
+                    true;
+
+            } else {
+
+                campoOutroCombustivel
+                    .style
+                    .display = "none";
+
+                outroCombustivel.required =
+                    false;
+
+                outroCombustivel.value =
+                    "";
+            }
+        }
+    );
+
+
+    // =====================================================
+    // PREPARAR CAMPOS ANTES DO ENVIO
+    // =====================================================
+
+    function prepararCampos() {
+
+        // MARCA
+
+        const marcaFinal =
+            document.getElementById(
+                "marcaFinal"
+            );
+
+        if (
+            marcaSelect.value ===
+            "OUTRA"
+        ) {
+
+            marcaFinal.value =
+                outraMarca.value;
+
         } else {
-            campoOutraMarca.style.display = "none";
-            outraMarca.required = false;
-            outraMarca.value = "";
+
+            marcaFinal.value =
+                marcaSelect.value;
         }
 
-    });
 
-    function prepararMarca() {
+        // COR
 
-        const marcaSelecionada = marcaSelect.value;
-        const marcaFinal = document.getElementById("marcaFinal");
+        const corFinal =
+            document.getElementById(
+                "corFinal"
+            );
 
-        if (marcaSelecionada === "OUTRA") {
-            marcaFinal.value = outraMarca.value;
+        if (
+            corSelect.value ===
+            "OUTRA"
+        ) {
+
+            corFinal.value =
+                outraCor.value;
+
         } else {
-            marcaFinal.value = marcaSelecionada;
+
+            corFinal.value =
+                corSelect.value;
+        }
+
+
+        // COMBUSTÍVEL
+
+        const combustivelFinal =
+            document.getElementById(
+                "tipoCombustivelFinal"
+            );
+
+        if (
+            combustivelSelect.value ===
+            "OUTRO"
+        ) {
+
+            combustivelFinal.value =
+                outroCombustivel.value;
+
+        } else {
+
+            combustivelFinal.value =
+                combustivelSelect.value;
         }
     }
+
 </script>
 
 </body>

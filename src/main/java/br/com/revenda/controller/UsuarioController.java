@@ -34,17 +34,43 @@ public class UsuarioController {
 
     @PostMapping("/usuarios")
     @ResponseBody
-    public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody Usuario usuario) {
-        Usuario usuarioSalvo = usuarioService.salvar(usuario);
+    public ResponseEntity<Usuario> cadastrar(
+            @Valid @RequestBody Usuario usuario
+    ) {
 
-        return ResponseEntity.status(201).body(usuarioSalvo);
+        usuario.setPerfil("USER");
+
+        Usuario usuarioSalvo =
+                usuarioService.salvar(usuario);
+
+        return ResponseEntity
+                .status(201)
+                .body(usuarioSalvo);
     }
 
     @PutMapping("/usuarios/{id}")
     @ResponseBody
-    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
-        Usuario usuarioAtualizado = usuarioService.atualizar(id, usuario);
-        return ResponseEntity.ok(usuarioAtualizado);
+    public ResponseEntity<Usuario> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody Usuario usuario
+    ) {
+
+        Usuario usuarioExistente =
+                usuarioService.buscarId(id);
+
+        usuario.setPerfil(
+                usuarioExistente.getPerfil()
+        );
+
+        Usuario usuarioAtualizado =
+                usuarioService.atualizar(
+                        id,
+                        usuario
+                );
+
+        return ResponseEntity.ok(
+                usuarioAtualizado
+        );
     }
 
     @DeleteMapping("/usuarios/{id}")

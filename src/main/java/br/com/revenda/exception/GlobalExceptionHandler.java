@@ -11,37 +11,42 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
-    public ResponseEntity<String> tratarRecursoNaoEncontrado(RecursoNaoEncontradoException exception){
-        return ResponseEntity.status(404).body(exception.getMessage());
+    public ResponseEntity<String> tratarRecursoNaoEncontrado(
+            RecursoNaoEncontradoException exception
+    ) {
+        return ResponseEntity
+                .status(404)
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler(DadosInvalidosException.class)
-    public ResponseEntity<String> tratarDadosInvalido(DadosInvalidosException excpetion){
-        return ResponseEntity.status(400).body(excpetion.getMessage());
+    public ResponseEntity<String> tratarDadosInvalidos(
+            DadosInvalidosException exception
+    ) {
+        return ResponseEntity
+                .badRequest()
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> tratarValidacao(MethodArgumentNotValidException exception) {
+    public ResponseEntity<List<String>> tratarValidacao(
+            MethodArgumentNotValidException exception
+    ) {
 
-        String mensagem = exception
-                .getBindingResult()
-                .getFieldErrors()
-                .get(0)
-                .getField() + ": " +
+        List<String> erros =
                 exception
                         .getBindingResult()
                         .getFieldErrors()
-                        .get(0)
-                        .getDefaultMessage();
+                        .stream()
+                        .map(erro ->
+                                erro.getField()
+                                        + ": "
+                                        + erro.getDefaultMessage()
+                        )
+                        .toList();
 
-        List<String> erros = exception
-                .getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(erro -> erro.getField() + ": " + erro.getDefaultMessage())
-                .toList();
-
-        return ResponseEntity.badRequest().body(erros);
+        return ResponseEntity
+                .badRequest()
+                .body(erros);
     }
-
 }

@@ -53,14 +53,34 @@ public class UsuarioService {
     }
 
     public Usuario atualizar(Long id, Usuario novosDados) {
-        Optional<Usuario> usuarioExiste = usuarioRepository.findById(id);
+
+        Optional<Usuario> usuarioExiste =
+                usuarioRepository.findById(id);
+
         if (usuarioExiste.isPresent()) {
-            Usuario usuario = usuarioExiste.get();
-            usuario.setLogin(novosDados.getLogin());
-            usuario.setSenha(novosDados.getSenha());
+
+            Usuario usuario =
+                    usuarioExiste.get();
+
+            usuario.setLogin(
+                    novosDados.getLogin()
+            );
+
+            String senhaCriptografada =
+                    passwordEncoder.encode(
+                            novosDados.getSenha()
+                    );
+
+            usuario.setSenha(
+                    senhaCriptografada
+            );
+
             return usuarioRepository.save(usuario);
         }
-         throw new RecursoNaoEncontradoException("Usuário não encontrado");
+
+        throw new RecursoNaoEncontradoException(
+                "Usuário não encontrado"
+        );
     }
 
     public Usuario buscarPorLogin(String login) {

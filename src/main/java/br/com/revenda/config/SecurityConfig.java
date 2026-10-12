@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
 
                         // Todo o resto precisa estar logado
+                        .requestMatchers("/usuarios/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
                 )

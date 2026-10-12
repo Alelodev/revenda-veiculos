@@ -1,5 +1,6 @@
 package br.com.revenda.controller;
 
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Documento;
 import br.com.revenda.model.Usuario;
 import br.com.revenda.model.Veiculo;
@@ -8,13 +9,12 @@ import br.com.revenda.service.ProprietarioService;
 import br.com.revenda.service.UsuarioService;
 import br.com.revenda.service.VeiculoService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.revenda.exception.RecursoNaoEncontradoException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,10 +22,10 @@ import java.util.List;
 @Controller
 public class VeiculoController {
 
-    private VeiculoService veiculoService;
-    private DocumentoService documentoService;
-    private ProprietarioService proprietarioService;
-    private UsuarioService usuarioService;
+    private final VeiculoService veiculoService;
+    private final DocumentoService documentoService;
+    private final ProprietarioService proprietarioService;
+    private final UsuarioService usuarioService;
 
     public VeiculoController(
             VeiculoService veiculoService,
@@ -119,7 +119,6 @@ public class VeiculoController {
                         usuario
                 );
 
-        // Impede trocar o dono do cadastro pela requisição
         veiculo.setUsuario(
                 veiculoExistente.getUsuario()
         );
@@ -130,7 +129,9 @@ public class VeiculoController {
                         veiculo
                 );
 
-        return ResponseEntity.ok(veiculoAtualizado);
+        return ResponseEntity.ok(
+                veiculoAtualizado
+        );
     }
 
 
@@ -154,9 +155,154 @@ public class VeiculoController {
                 veiculo.getIdVeiculo()
         );
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 
-}
 
+    @GetMapping("/veiculos/tela")
+    public String telaVeiculos(
+            Model model,
+            Principal principal
+    ) {
+
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
+
+        List<Veiculo> veiculos;
+
+        if (usuario.getPerfil().equals("ADMIN")) {
+
+            veiculos =
+                    veiculoService.mostrarTodos();
+
+        } else {
+
+            veiculos =
+                    veiculoService.buscarPorUsuario(
+                            usuario.getIdUsuario()
+                    );
+        }
+
+        model.addAttribute(
+                "veiculos",
+                veiculos
+        );
+
+        return "veiculos";
+    }
+
+
+    @GetMapping("/veiculos/novo")
+    public String novoVeiculo(
+            Model model
+    ) {
+
+        model.addAttribute(
+                "proprietarios",
+                proprietarioService.mostrarTodos()
+        );
+
+        return "cadastro-veiculo";
+    }
+
+
+    @PostMapping("/veiculos/form")
+    public String cadastrarFormulario(
+            @ModelAttribute Veiculo veiculo,
+            Principal principal
+    ) {
+
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
+
+        veiculo.setUsuario(usuario);
+
+        veiculoService.salvar(veiculo);
+
+        return "redirect:/veiculos/tela";
+    }
+
+
+    @GetMapping("/veiculos/{id}/documentos")
+    public String telaDocumentosVeiculo(
+            @PathVariable Long id,
+            Model model,
+            Principal principal
+    ) {
+
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
+
+        Veiculo veiculo =
+                veiculoService.buscarVeiculoPermitido(
+                        id,
+                        usuario
+                );
+
+        List<Documento> documentos =
+                documentoService.buscarPorVeiculo(id);
+
+        model.addAttribute(
+                "veiculo",
+                veiculo
+        );
+
+        model.addAttribute(
+                "documentos",
+                documentos
+        );
+
+        return "documentos-veiculo";
+    }
+
+
+    @PostMapping("/veiculos/{id}/excluir")
+    public String excluirFormulario(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes,
+            Principal principal
+    ) {
+
+        try {
+
+            Usuario usuario =
+                    usuarioService.buscarPorLogin(
+                            principal.getName()
+                    );
+
+            Veiculo veiculo =
+                    veiculoService.buscarVeiculoPermitido(
+                            id,
+                            usuario
+                    );
+
+            veiculoService.deletarId(
+                    veiculo.getIdVeiculo()
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "sucesso",
+                    "Cadastro excluído com sucesso."
+            );
+
+        } catch (RecursoNaoEncontradoException exception) {
+
+            redirectAttributes.addFlashAttribute(
+                    "erro",
+                    "O veículo não foi encontrado."
+            );
+
+        } catch (DataIntegrityViolationException exception) {
+
+            redirectAttributes.addFlashAttribute(
+                    "erro",
+                    "Não foi possível excluir o veículo. Verifique se existem documentos vinculados."
+            );
+        }
+
+        return "redirect:/veiculos/tela";
+    }
+}

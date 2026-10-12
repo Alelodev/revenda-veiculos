@@ -1,5 +1,6 @@
 package br.com.revenda.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -15,6 +16,7 @@ public class Usuario {
     @NotBlank(message = "Login é obrigatorio!")
     private String login;
 
+    @JsonIgnore
     @Column(name = "senha", nullable = false)
     @NotBlank(message = "Senha é obrigatoria!")
     private String senha;

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
     List<Veiculo> findByUsuarioIdUsuario(Long idUsuario);
+    boolean existsByPlaca(String placa);
 }
