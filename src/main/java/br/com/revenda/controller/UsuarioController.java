@@ -62,9 +62,11 @@ public class UsuarioController {
     @PostMapping("/cadastro")
     public String cadastrarUsuario(Usuario usuario) {
 
+        usuario.setPerfil("USER");
+
         usuarioService.salvar(usuario);
 
-        return "redirect:/cadastro";
+        return "redirect:/principal";
     }
 
     @GetMapping("/login")

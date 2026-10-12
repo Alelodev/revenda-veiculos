@@ -20,12 +20,20 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
+
+                        // Rotas públicas
                         .requestMatchers(
                                 "/",
-                                "/cadastro",
                                 "/login"
                         ).permitAll()
-                        .anyRequest().authenticated()
+
+                        // Somente ADMIN pode cadastrar usuários
+                        .requestMatchers("/cadastro")
+                        .hasRole("ADMIN")
+
+                        // Todo o resto precisa estar logado
+                        .anyRequest()
+                        .authenticated()
                 )
 
                 .formLogin(form -> form

@@ -29,7 +29,7 @@ public class ServicoDeUsuarioCustomizado implements UserDetailsService {
         return User
                 .withUsername(usuario.getLogin())
                 .password(usuario.getSenha())
-                .roles("USER")
+                .roles(usuario.getPerfil())
                 .build();
     }
 }

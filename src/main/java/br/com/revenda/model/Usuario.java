@@ -19,6 +19,18 @@ public class Usuario {
     @NotBlank(message = "Senha é obrigatoria!")
     private String senha;
 
+    @Column(name = "perfil", nullable = false, length = 20)
+    @NotBlank(message = "Perfil é obrigatório")
+    private String perfil;
+
+    public String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
+    }
+
     public Long getIdUsuario() {
         return idUsuario;
     }
