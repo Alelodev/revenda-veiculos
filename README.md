@@ -1102,3 +1102,8 @@ Estudante de Engenharia de Software.
 GitHub:
 
 https://github.com/Alelodev
+
+Linkedin:
+
+www.linkedin.com/in/angelo-roberto-da-silva-medeiros-50a482282
+
