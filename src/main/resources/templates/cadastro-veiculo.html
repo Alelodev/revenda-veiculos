@@ -48,7 +48,8 @@
 <h1>Cadastrar veículo</h1>
 
 <form action="/veiculos/form"
-      method="post">
+      method="post"
+      onsubmit="prepararMarca()">
 
     <label>
         Proprietário
@@ -68,13 +69,75 @@
 
     </select>
 
-    <label>
-        Marca
-    </label>
+    <label>Marca</label>
 
-    <input type="text"
+    <select id="marca" required>
+
+        <option value="">
+            Selecione
+        </option>
+
+        <option value="Toyota">
+            Toyota
+        </option>
+
+        <option value="Honda">
+            Honda
+        </option>
+
+        <option value="Volkswagen">
+            Volkswagen
+        </option>
+
+        <option value="Fiat">
+            Fiat
+        </option>
+
+        <option value="Chevrolet">
+            Chevrolet
+        </option>
+
+        <option value="Ford">
+            Ford
+        </option>
+
+        <option value="Hyundai">
+            Hyundai
+        </option>
+
+        <option value="Renault">
+            Renault
+        </option>
+
+        <option value="Jeep">
+            Jeep
+        </option>
+
+        <option value="Nissan">
+            Nissan
+        </option>
+
+        <option value="OUTRA">
+            Outra
+        </option>
+
+    </select>
+
+    <input type="hidden"
            name="marca"
-           required>
+           id="marcaFinal">
+
+    <div id="campoOutraMarca"
+         style="display: none;">
+
+        <label>
+            Digite a marca
+        </label>
+
+        <input type="text"
+               id="outraMarca">
+
+    </div>
 
     <label>
         Modelo
@@ -189,6 +252,36 @@
     Voltar
 </a>
 
-</body>
+<script>
+    const marcaSelect = document.getElementById("marca");
+    const campoOutraMarca = document.getElementById("campoOutraMarca");
+    const outraMarca = document.getElementById("outraMarca");
 
+    marcaSelect.addEventListener("change", function () {
+
+        if (marcaSelect.value === "OUTRA") {
+            campoOutraMarca.style.display = "block";
+            outraMarca.required = true;
+        } else {
+            campoOutraMarca.style.display = "none";
+            outraMarca.required = false;
+            outraMarca.value = "";
+        }
+
+    });
+
+    function prepararMarca() {
+
+        const marcaSelecionada = marcaSelect.value;
+        const marcaFinal = document.getElementById("marcaFinal");
+
+        if (marcaSelecionada === "OUTRA") {
+            marcaFinal.value = outraMarca.value;
+        } else {
+            marcaFinal.value = marcaSelecionada;
+        }
+    }
+</script>
+
+</body>
 </html>

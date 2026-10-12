@@ -3,6 +3,7 @@ package br.com.revenda.service;
 import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Usuario;
 import br.com.revenda.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +13,23 @@ import java.util.Optional;
 public class UsuarioService {
 
     private UsuarioRepository usuarioRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.usuarioRepository = usuarioRepository;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario salvar(Usuario usuario) {
+
+        String senhaCriptografada =
+                passwordEncoder.encode(usuario.getSenha());
+
+        usuario.setSenha(senhaCriptografada);
+
         return usuarioRepository.save(usuario);
     }
 

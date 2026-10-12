@@ -1,16 +1,15 @@
 package br.com.revenda.controller;
 
+import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Proprietario;
 import br.com.revenda.service.ProprietarioService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.revenda.exception.RecursoNaoEncontradoException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -85,7 +84,6 @@ public class ProprietarioController {
 
         return "redirect:/proprietarios/tela";
     }
-
 
 
     @PostMapping("/proprietarios/{id}/excluir")

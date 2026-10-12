@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            width: 300px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Login</h1>
+
+<p th:if="${param.error}" style="color: red;">
+    Usuário ou senha inválidos.
+</p>
+
+<form th:action="@{/login}" method="post">
+
+    <label>Usuário</label>
+    <input type="text"
+           name="username"
+           required>
+
+    <label>Senha</label>
+    <input type="password"
+           name="password"
+           required>
+
+    <button type="submit">
+        Entrar
+    </button>
+
+</form>
+
+<br>
+
+<a href="/cadastro">
+    Criar conta
+</a>
+
+</body>
+</html>

@@ -53,5 +53,23 @@ public class UsuarioController {
         usuarioService.deletarId(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/cadastro")
+    public String telaCadastro() {
+        return "cadastro-usuario";
+    }
+
+    @PostMapping("/cadastro")
+    public String cadastrarUsuario(Usuario usuario) {
+
+        usuarioService.salvar(usuario);
+
+        return "redirect:/cadastro";
+    }
+
+    @GetMapping("/login")
+    public String telaLogin() {
+        return "login";
+    }
 }
 
