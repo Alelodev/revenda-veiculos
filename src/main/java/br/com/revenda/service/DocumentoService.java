@@ -3,6 +3,7 @@ package br.com.revenda.service;
 import br.com.revenda.exception.DadosInvalidosException;
 import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Documento;
+import br.com.revenda.model.Usuario;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.DocumentoRepository;
 import org.springframework.core.io.Resource;
@@ -20,10 +21,13 @@ import java.util.UUID;
 @Service
 public class DocumentoService {
 
-    private DocumentoRepository documentoRepository;
-    private VeiculoService veiculoService;
+    private final DocumentoRepository documentoRepository;
+    private final VeiculoService veiculoService;
 
-    public DocumentoService(DocumentoRepository documentoRepository, VeiculoService veiculoService) {
+    public DocumentoService(
+            DocumentoRepository documentoRepository,
+            VeiculoService veiculoService
+    ) {
         this.documentoRepository = documentoRepository;
         this.veiculoService = veiculoService;
     }
@@ -128,5 +132,28 @@ public class DocumentoService {
 
     public List<Documento> buscarPorVeiculo(Long idVeiculo) {
         return documentoRepository.findByVeiculoIdVeiculo(idVeiculo);
+    }
+
+    public Documento buscarDocumentoPermitido(
+            Long idDocumento,
+            Usuario usuario
+    ) {
+
+        Documento documento = buscarId(idDocumento);
+
+        Veiculo veiculo = documento.getVeiculo();
+
+        if (veiculo == null) {
+            throw new RecursoNaoEncontradoException(
+                    "Documento não encontrado"
+            );
+        }
+
+        veiculoService.buscarVeiculoPermitido(
+                veiculo.getIdVeiculo(),
+                usuario
+        );
+
+        return documento;
     }
 }

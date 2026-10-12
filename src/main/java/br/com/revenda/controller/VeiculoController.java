@@ -40,47 +40,7 @@ public class VeiculoController {
     }
     @GetMapping("/veiculos")
     @ResponseBody
-    public ResponseEntity<List<Veiculo>> listarVeiculos() {
-        List<Veiculo> mostrarVeiculos = veiculoService.mostrarTodos();
-        return ResponseEntity.ok(mostrarVeiculos);
-    }
-
-    @GetMapping("/veiculos/{id}")
-    @ResponseBody
-    public ResponseEntity<Veiculo> buscarPorId(@PathVariable Long id) {
-        Veiculo veiculo = veiculoService.buscarId(id);
-        return ResponseEntity.ok(veiculo);
-    }
-
-    @PostMapping("/veiculos")
-    @ResponseBody
-    public ResponseEntity<Veiculo> cadastrar(@Valid @RequestBody Veiculo veiculo) {
-        Veiculo veiculoSalvo = veiculoService.salvar(veiculo);
-
-        return ResponseEntity.status(201).body(veiculoSalvo);
-
-    }
-
-    @PutMapping("/veiculos/{id}")
-    @ResponseBody
-    public ResponseEntity<Veiculo> atualizar(@PathVariable Long id, @Valid @RequestBody Veiculo veiculo) {
-        Veiculo veiculoAtualizado = veiculoService.atualizar(id, veiculo);
-        return ResponseEntity.ok(veiculoAtualizado);
-
-    }
-
-    @DeleteMapping("/veiculos/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        veiculoService.deletarId(id);
-        return ResponseEntity.noContent().build();
-
-
-    }
-
-    @GetMapping("/veiculos/tela")
-    public String telaVeiculos(
-            Model model,
+    public ResponseEntity<List<Veiculo>> listarVeiculos(
             Principal principal
     ) {
 
@@ -97,42 +57,34 @@ public class VeiculoController {
             );
         }
 
-        model.addAttribute("veiculos", veiculos);
-
-        return "veiculos";
+        return ResponseEntity.ok(veiculos);
     }
 
-    @GetMapping("/veiculos/{id}/documentos")
-    public String telaDocumentosVeiculo(
+
+    @GetMapping("/veiculos/{id}")
+    @ResponseBody
+    public ResponseEntity<Veiculo> buscarPorId(
             @PathVariable Long id,
-            Model model
+            Principal principal
     ) {
 
-        Veiculo veiculo = veiculoService.buscarId(id);
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
 
-        List<Documento> documentos =
-                documentoService.buscarPorVeiculo(id);
+        Veiculo veiculo =
+                veiculoService.buscarVeiculoPermitido(
+                        id,
+                        usuario
+                );
 
-        model.addAttribute("veiculo", veiculo);
-        model.addAttribute("documentos", documentos);
-
-        return "documentos-veiculo";
+        return ResponseEntity.ok(veiculo);
     }
 
-    @GetMapping("/veiculos/novo")
-    public String novoVeiculo(Model model) {
 
-        model.addAttribute(
-                "proprietarios",
-                proprietarioService.mostrarTodos()
-        );
-
-        return "cadastro-veiculo";
-    }
-
-    @PostMapping("/veiculos/form")
-    public String cadastrarFormulario(
-            @ModelAttribute Veiculo veiculo,
+    @PostMapping("/veiculos")
+    @ResponseBody
+    public ResponseEntity<Veiculo> cadastrar(
+            @Valid @RequestBody Veiculo veiculo,
             Principal principal
     ) {
 
@@ -141,28 +93,68 @@ public class VeiculoController {
 
         veiculo.setUsuario(usuario);
 
-        veiculoService.salvar(veiculo);
+        Veiculo veiculoSalvo =
+                veiculoService.salvar(veiculo);
 
-        return "redirect:/veiculos/tela";
+        return ResponseEntity
+                .status(201)
+                .body(veiculoSalvo);
     }
 
-    @PostMapping("/veiculos/{id}/excluir")
-    public String excluirFormulario(
+
+    @PutMapping("/veiculos/{id}")
+    @ResponseBody
+    public ResponseEntity<Veiculo> atualizar(
             @PathVariable Long id,
-            RedirectAttributes redirectAttributes
+            @Valid @RequestBody Veiculo veiculo,
+            Principal principal
     ) {
-        try {
-            veiculoService.deletarId(id);
-            redirectAttributes.addFlashAttribute("sucesso", "Cadastro excluído com sucesso.");
-        } catch (RecursoNaoEncontradoException exception) {
-            redirectAttributes.addFlashAttribute("erro", "O veículo não foi encontrado.");
-        } catch (DataIntegrityViolationException exception) {
-            redirectAttributes.addFlashAttribute(
-                    "erro",
-                    "Não foi possível excluir o veículo. Verifique se existem documentos vinculados."
-            );
-        }
-        return "redirect:/veiculos/tela";
+
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
+
+        Veiculo veiculoExistente =
+                veiculoService.buscarVeiculoPermitido(
+                        id,
+                        usuario
+                );
+
+        // Impede trocar o dono do cadastro pela requisição
+        veiculo.setUsuario(
+                veiculoExistente.getUsuario()
+        );
+
+        Veiculo veiculoAtualizado =
+                veiculoService.atualizar(
+                        id,
+                        veiculo
+                );
+
+        return ResponseEntity.ok(veiculoAtualizado);
+    }
+
+
+    @DeleteMapping("/veiculos/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deletar(
+            @PathVariable Long id,
+            Principal principal
+    ) {
+
+        Usuario usuario =
+                usuarioService.buscarPorLogin(principal.getName());
+
+        Veiculo veiculo =
+                veiculoService.buscarVeiculoPermitido(
+                        id,
+                        usuario
+                );
+
+        veiculoService.deletarId(
+                veiculo.getIdVeiculo()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 
 

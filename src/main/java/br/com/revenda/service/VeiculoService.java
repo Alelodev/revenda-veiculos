@@ -3,6 +3,7 @@ package br.com.revenda.service;
 import br.com.revenda.exception.DadosInvalidosException;
 import br.com.revenda.exception.RecursoNaoEncontradoException;
 import br.com.revenda.model.Proprietario;
+import br.com.revenda.model.Usuario;
 import br.com.revenda.model.Veiculo;
 import br.com.revenda.repository.VeiculoRepository;
 import org.springframework.stereotype.Service;
@@ -90,5 +91,24 @@ public class VeiculoService {
 
     public List<Veiculo> buscarPorUsuario(Long idUsuario) {
         return veiculoRepository.findByUsuarioIdUsuario(idUsuario);
+    }
+
+    public Veiculo buscarVeiculoPermitido(Long idVeiculo, Usuario usuario) {
+
+        Veiculo veiculo = buscarId(idVeiculo);
+
+        if (usuario.getPerfil().equals("ADMIN")) {
+            return veiculo;
+        }
+
+        if (veiculo.getUsuario() == null ||
+                !veiculo.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+
+            throw new RecursoNaoEncontradoException(
+                    "Veículo não encontrado"
+            );
+        }
+
+        return veiculo;
     }
 }
