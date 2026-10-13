@@ -4,58 +4,154 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Login</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+        * {
+            box-sizing: border-box;
         }
 
-        form {
-            width: 300px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #f5f5f5;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background-color: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 16px;
+            margin-bottom: 6px;
         }
 
         input {
             display: block;
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+            min-height: 50px;
+            padding: 12px;
+            font-size: 17px;
+            border: 1px solid #aaa;
+            border-radius: 7px;
         }
 
         button {
-            padding: 10px 20px;
+            width: 100%;
+            min-height: 50px;
+            margin-top: 24px;
+            padding: 12px 20px;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            border: none;
+            border-radius: 7px;
+
+            background-color: #222;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .erro {
+            color: #b00020;
+            background-color: #ffe9ed;
+            padding: 12px;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 24px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            input,
+            button {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<h1>Login</h1>
+<div class="container">
 
-<p th:if="${param.error}" style="color: red;">
-    Usuário ou senha inválidos.
-</p>
+    <h1>Login</h1>
 
-<form th:action="@{/login}" method="post">
+    <p th:if="${param.error}"
+       class="erro">
+        Usuário ou senha inválidos.
+    </p>
 
-    <label>Usuário</label>
-    <input type="text"
-           name="username"
-           required>
+    <form th:action="@{/login}"
+          method="post">
 
-    <label>Senha</label>
-    <input type="password"
-           name="password"
-           required>
+        <label for="username">
+            Usuário
+        </label>
 
-    <button type="submit">
-        Entrar
-    </button>
+        <input type="text"
+               id="username"
+               name="username"
+               autocomplete="username"
+               required>
 
-</form>
+        <label for="password">
+            Senha
+        </label>
+
+        <input type="password"
+               id="password"
+               name="password"
+               autocomplete="current-password"
+               required>
+
+        <button type="submit">
+            Entrar
+        </button>
+
+    </form>
+
+</div>
 
 </body>
 </html>

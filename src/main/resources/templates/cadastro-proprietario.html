@@ -1,113 +1,211 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Cadastrar proprietário</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+        * {
+            box-sizing: border-box;
         }
 
-        form {
-            width: 350px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+
+            margin: 0 auto;
+            padding: 30px;
+
+            background-color: white;
+            border-radius: 12px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 30px;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+
+            margin-top: 18px;
+            margin-bottom: 6px;
+
+            font-size: 17px;
+            font-weight: bold;
         }
 
         input {
             display: block;
+
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+            min-height: 50px;
+
+            padding: 12px;
+
+            font-size: 17px;
+
+            border: 1px solid #aaa;
+            border-radius: 7px;
         }
 
         button {
-            padding: 10px 20px;
-            margin-top: 10px;
+            width: 100%;
+            min-height: 52px;
+
+            padding: 12px;
+
+            margin-top: 25px;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            border: none;
+            border-radius: 7px;
+
+            background-color: #222;
+            color: white;
+
+            cursor: pointer;
         }
 
-        a {
+        .voltar {
+            display: block;
+
+            margin-top: 22px;
+
+            text-align: center;
+
+            font-size: 17px;
+
             text-decoration: none;
+            color: #333;
         }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 22px 18px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            input,
+            button {
+                font-size: 18px;
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<h1>Cadastrar proprietário</h1>
+<div class="container">
 
-<form th:action="@{/proprietarios/form}" method="post">
+    <h1>
+        Cadastrar proprietário
+    </h1>
 
-    <input type="hidden"
-           th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}">
+    <form th:action="@{/proprietarios/form}"
+          method="post">
 
-    <label>
-        Nome completo
-    </label>
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}">
 
-    <input type="text"
-           name="nomeCompleto"
-           required>
 
-    <label>
-        CPF
-    </label>
+        <label for="nomeCompleto">
+            Nome completo
+        </label>
 
-    <input type="text"
-           name="cpf"
-           maxlength="11"
-           required>
+        <input type="text"
+               id="nomeCompleto"
+               name="nomeCompleto"
+               required>
 
-    <label>
-        Telefone
-    </label>
 
-    <input type="text"
-           name="telefone">
+        <label for="cpf">
+            CPF
+        </label>
 
-    <label>
-        Endereço
-    </label>
+        <input type="text"
+               id="cpf"
+               name="cpf"
+               maxlength="11"
+               inputmode="numeric"
+               required>
 
-    <input type="text"
-           name="endereco">
 
-    <label>
-        Email
-    </label>
+        <label for="telefone">
+            Telefone
+        </label>
 
-    <input type="email"
-           name="email">
+        <input type="tel"
+               id="telefone"
+               name="telefone">
 
-    <label>
-        CNH
-    </label>
 
-    <input type="text"
-           name="cnh">
+        <label for="endereco">
+            Endereço
+        </label>
 
-    <button type="submit">
-        Cadastrar
-    </button>
+        <input type="text"
+               id="endereco"
+               name="endereco">
 
-</form>
 
-<br>
+        <label for="email">
+            Email
+        </label>
 
-<a th:href="@{/proprietarios/tela}">
-    Voltar
-</a>
+        <input type="email"
+               id="email"
+               name="email">
+
+
+        <label for="cnh">
+            CNH
+        </label>
+
+        <input type="text"
+               id="cnh"
+               name="cnh">
+
+
+        <button type="submit">
+            Cadastrar
+        </button>
+
+    </form>
+
+    <a class="voltar"
+       th:href="@{/proprietarios/tela}">
+        ← Voltar
+    </a>
+
+</div>
 
 </body>
-
 </html>

@@ -3,209 +3,487 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Documentos do veículo</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+
+            margin: 0;
+            padding: 30px 20px;
+
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 30px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        .dados-veiculo {
+            padding: 18px;
+
+            margin-bottom: 25px;
+
+            background-color: white;
+
+            border-radius: 10px;
+        }
+
+        .dados-veiculo p {
+            margin: 8px 0;
+            font-size: 17px;
+        }
+
+        .mensagem-sucesso {
+            color: #146c2e;
+            background-color: #e7f5eb;
+
+            padding: 12px;
+
+            border-radius: 7px;
+        }
+
+        .mensagem-erro {
+            color: #b00020;
+            background-color: #ffe9ed;
+
+            padding: 12px;
+
+            border-radius: 7px;
+        }
+
+        .tabela-container {
+            width: 100%;
+
+            overflow-x: auto;
+
+            background-color: white;
+
+            border-radius: 10px;
+
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
-            border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
+            min-width: 750px;
+
+            border-collapse: collapse;
         }
 
         th,
         td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            padding: 13px;
+
+            border: 1px solid #ddd;
+
+            text-align: left;
+
+            font-size: 16px;
+
+            white-space: nowrap;
         }
 
         th {
             background-color: #eeeeee;
         }
 
-        form {
-            margin-top: 30px;
-        }
+        td a {
+            display: inline-block;
 
-        input,
-        select,
-        button {
-            padding: 8px;
-            margin: 5px;
-        }
+            padding: 8px 12px;
 
-        a {
+            background-color: #eee;
+
+            border-radius: 6px;
+
+            color: #222;
+
             text-decoration: none;
         }
+
+        td form {
+            margin: 0;
+        }
+
+        td button {
+            min-height: 40px;
+
+            padding: 8px 12px;
+
+            border: none;
+            border-radius: 6px;
+
+            background-color: #b3261e;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        .upload-box {
+            margin-top: 30px;
+
+            padding: 24px;
+
+            background-color: white;
+
+            border-radius: 10px;
+        }
+
+        .upload-box label {
+            display: block;
+
+            margin-top: 15px;
+            margin-bottom: 6px;
+
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .upload-box select,
+        .upload-box input[type="file"] {
+            width: 100%;
+
+            min-height: 50px;
+
+            padding: 10px;
+
+            font-size: 17px;
+
+            border: 1px solid #aaa;
+            border-radius: 7px;
+
+            background-color: white;
+        }
+
+        .upload-box button {
+            width: 100%;
+
+            min-height: 52px;
+
+            padding: 12px;
+
+            margin-top: 22px;
+
+            border: none;
+            border-radius: 7px;
+
+            background-color: #222;
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .voltar {
+            display: inline-block;
+
+            margin-top: 25px;
+
+            min-height: 48px;
+
+            padding: 12px 16px;
+
+            border: 1px solid #aaa;
+            border-radius: 7px;
+
+            background-color: white;
+
+            color: #222;
+
+            font-size: 17px;
+
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 18px 12px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h2 {
+                font-size: 21px;
+            }
+
+            .dados-veiculo,
+            .upload-box {
+                padding: 18px;
+            }
+
+            .upload-box select,
+            .upload-box input,
+            .upload-box button {
+                font-size: 18px;
+            }
+
+            .voltar {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<h1>Documentos do veículo</h1>
+<div class="container">
 
-<h2>
-    <span th:text="${veiculo.marca}"></span>
+    <h1>
+        Documentos do veículo
+    </h1>
 
-    <span th:text="${veiculo.modelo}"></span>
-</h2>
 
-<p>
-    <strong>Placa:</strong>
+    <div class="dados-veiculo">
 
-    <span th:text="${veiculo.placa}"></span>
-</p>
+        <h2>
 
-<p>
-    <strong>Ano:</strong>
+            <span th:text="${veiculo.marca}">
+            </span>
 
-    <span th:text="${veiculo.anoModelo}"></span>
-</p>
+            <span th:text="${veiculo.modelo}">
+            </span>
 
-<hr>
+        </h2>
 
-<h2>Documentos cadastrados</h2>
 
-<p th:if="${sucesso}" th:text="${sucesso}" role="status" style="color: #146c2e;"></p>
-<p th:if="${erro}" th:text="${erro}" role="alert" style="color: #b00020;"></p>
+        <p>
 
-<table>
+            <strong>
+                Placa:
+            </strong>
 
-    <thead>
+            <span th:text="${veiculo.placa}">
+            </span>
 
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Tipo</th>
-        <th>Data de upload</th>
-        <th>Download</th>
-        <th>Ações</th>
-    </tr>
+        </p>
 
-    </thead>
 
-    <tbody>
+        <p>
 
-    <tr th:each="documento : ${documentos}">
+            <strong>
+                Ano:
+            </strong>
 
-        <td th:text="${documento.idDocumento}"></td>
+            <span th:text="${veiculo.anoModelo}">
+            </span>
 
-        <td th:text="${documento.nome}"></td>
+        </p>
 
-        <td th:text="${documento.tipoDocumento}"></td>
+    </div>
 
-        <td th:text="${documento.dataUpload}"></td>
 
-        <td>
-            <a th:href="@{/documentos/{id}/download(id=${documento.idDocumento})}">
-                Baixar
-            </a>
-        </td>
+    <h2>
+        Documentos cadastrados
+    </h2>
 
-        <td>
-            <form th:action="@{/veiculos/{idVeiculo}/documentos/{idDocumento}/excluir(idVeiculo=${veiculo.idVeiculo},idDocumento=${documento.idDocumento})}"
-                  method="post" style="margin: 0;"
-                  onsubmit="return confirm('Excluir o registro deste documento? Esta ação não pode ser desfeita.');">
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
 
-    </tbody>
+    <p th:if="${sucesso}"
+       th:text="${sucesso}"
+       role="status"
+       class="mensagem-sucesso">
+    </p>
 
-</table>
 
-<hr>
+    <p th:if="${erro}"
+       th:text="${erro}"
+       role="alert"
+       class="mensagem-erro">
+    </p>
 
-<h2>Enviar novo documento</h2>
 
-<form th:action="@{/documentos/upload-form}"
-      method="post"
-      enctype="multipart/form-data">
+    <div class="tabela-container">
 
-    <input type="hidden"
-           th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}">
+        <table>
 
-    <input type="hidden"
-           name="idVeiculo"
-           th:value="${veiculo.idVeiculo}">
+            <thead>
 
-    <label>
-        Tipo do documento:
-    </label>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Data de upload</th>
+                <th>Download</th>
+                <th>Ações</th>
+            </tr>
 
-    <select name="tipoDocumento"
-            required>
+            </thead>
 
-        <option value="">
-            Selecione
-        </option>
 
-        <option value="ATPV">
-            ATPV
-        </option>
+            <tbody>
 
-        <option value="CRLV">
-            CRLV
-        </option>
+            <tr th:each="documento : ${documentos}">
 
-        <option value="CRV">
-            CRV
-        </option>
+                <td th:text="${documento.idDocumento}">
+                </td>
 
-        <option value="LAUDO_CAUTELAR">
-            Laudo cautelar
-        </option>
+                <td th:text="${documento.nome}">
+                </td>
 
-        <option value="CONTRATO_COMPRA">
-            Contrato de compra
-        </option>
+                <td th:text="${documento.tipoDocumento}">
+                </td>
 
-        <option value="CONTRATO_VENDA">
-            Contrato de venda
-        </option>
+                <td th:text="${documento.dataUpload}">
+                </td>
 
-        <option value="NOTA_FISCAL">
-            Nota fiscal
-        </option>
 
-        <option value="OUTRO">
-            Outro
-        </option>
+                <td>
 
-    </select>
+                    <a th:href="@{/documentos/{id}/download(id=${documento.idDocumento})}">
+                        Baixar
+                    </a>
 
-    <br>
+                </td>
 
-    <label>
-        Arquivo:
-    </label>
 
-    <input type="file"
-           name="arquivo"
-           required>
+                <td>
 
-    <br>
+                    <form th:action="@{/veiculos/{idVeiculo}/documentos/{idDocumento}/excluir(idVeiculo=${veiculo.idVeiculo},idDocumento=${documento.idDocumento})}"
+                          method="post"
+                          onsubmit="return confirm('Excluir o registro deste documento? Esta ação não pode ser desfeita.');">
 
-    <button type="submit">
-        Enviar documento
-    </button>
+                        <button type="submit">
+                            Excluir
+                        </button>
 
-</form>
+                    </form>
 
-<br>
+                </td>
 
-<a th:href="@{/veiculos/tela}">
-    Voltar para veículos
-</a>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="upload-box">
+
+        <h2>
+            Enviar novo documento
+        </h2>
+
+
+        <form th:action="@{/documentos/upload-form}"
+              method="post"
+              enctype="multipart/form-data">
+
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+
+            <input type="hidden"
+                   name="idVeiculo"
+                   th:value="${veiculo.idVeiculo}">
+
+
+            <label for="tipoDocumento">
+                Tipo do documento
+            </label>
+
+
+            <select id="tipoDocumento"
+                    name="tipoDocumento"
+                    required>
+
+                <option value="">
+                    Selecione
+                </option>
+
+                <option value="ATPV">
+                    ATPV
+                </option>
+
+                <option value="CRLV">
+                    CRLV
+                </option>
+
+                <option value="CRV">
+                    CRV
+                </option>
+
+                <option value="LAUDO_CAUTELAR">
+                    Laudo cautelar
+                </option>
+
+                <option value="CONTRATO_COMPRA">
+                    Contrato de compra
+                </option>
+
+                <option value="CONTRATO_VENDA">
+                    Contrato de venda
+                </option>
+
+                <option value="NOTA_FISCAL">
+                    Nota fiscal
+                </option>
+
+                <option value="OUTRO">
+                    Outro
+                </option>
+
+            </select>
+
+
+            <label for="arquivo">
+                Arquivo
+            </label>
+
+            <input type="file"
+                   id="arquivo"
+                   name="arquivo"
+                   required>
+
+
+            <button type="submit">
+                Enviar documento
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <a class="voltar"
+       th:href="@{/veiculos/tela}">
+        ← Voltar para veículos
+    </a>
+
+</div>
 
 </body>
-
 </html>

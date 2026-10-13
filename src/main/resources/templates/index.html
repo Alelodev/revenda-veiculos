@@ -1,46 +1,167 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Revenda de Veículos</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+        * {
+            box-sizing: border-box;
         }
 
-        a {
-            display: block;
-            margin: 15px 0;
-            font-size: 18px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 65px;
+            padding: 15px;
+
+            background-color: white;
+
+            border: 1px solid #ddd;
+            border-radius: 10px;
+
+            color: #222;
             text-decoration: none;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            text-align: center;
+
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .menu a:hover {
+            background-color: #eeeeee;
+        }
+
+        .logout {
+            margin-top: 25px;
+        }
+
+        .logout button {
+            width: 100%;
+            min-height: 52px;
+
+            border: none;
+            border-radius: 8px;
+
+            background-color: #333;
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .logout button:hover {
+            background-color: #555;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 27px;
+                text-align: center;
+            }
+
+            .menu {
+                grid-template-columns: 1fr;
+            }
+
+            .menu a {
+                min-height: 62px;
+                font-size: 18px;
+            }
+
+            .logout button {
+                font-size: 18px;
+            }
         }
     </style>
+
 </head>
 
 <body>
 
-<h1>Sistema de Revenda de Veículos</h1>
+<div class="container">
 
-<a th:href="@{/veiculos/tela}">Veículos</a>
+    <h1>
+        Sistema de Revenda de Veículos
+    </h1>
 
-<a th:href="@{/proprietarios/tela}">Proprietários</a>
+    <div class="menu">
 
-<a th:href="@{/veiculos/novo}">Cadastrar veículo</a>
+        <a th:href="@{/veiculos/tela}">
+            Veículos
+        </a>
 
-<a th:href="@{/proprietarios/novo}">Cadastrar proprietário</a>
+        <a th:href="@{/proprietarios/tela}">
+            Proprietários
+        </a>
 
-<a th:href="@{/cadastro}">
-    Cadastrar usuário
-</a>
+        <a th:href="@{/veiculos/novo}">
+            Cadastrar veículo
+        </a>
 
-<br>
+        <a th:href="@{/proprietarios/novo}">
+            Cadastrar proprietário
+        </a>
 
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Sair</button>
-</form>
+        <a th:href="@{/cadastro}">
+            Cadastrar usuário
+        </a>
+
+    </div>
+
+    <form class="logout"
+          th:action="@{/logout}"
+          method="post">
+
+        <button type="submit">
+            Sair
+        </button>
+
+    </form>
+
+</div>
 
 </body>
 </html>

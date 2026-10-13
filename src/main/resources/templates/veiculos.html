@@ -3,119 +3,324 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Veículos</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0;
+            padding: 30px 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         h1 {
+            font-size: 30px;
+            margin-top: 0;
+            margin-bottom: 22px;
+        }
+
+        .acoes-topo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 20px;
+        }
+
+        .acoes-topo a,
+        .acoes-topo button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding: 10px 16px;
+
+            font-size: 16px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+        .acoes-topo a {
+            background-color: white;
+            color: #222;
+            border: 1px solid #aaa;
+        }
+
+        .acoes-topo form {
+            margin: 0;
+        }
+
+        .acoes-topo button {
+            border: none;
+
+            background-color: #333;
+            color: white;
+        }
+
+        .mensagem-sucesso {
+            color: #146c2e;
+            background-color: #e7f5eb;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        .mensagem-erro {
+            color: #b00020;
+            background-color: #ffe9ed;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+
+            background-color: white;
+
+            border-radius: 10px;
+
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             border-collapse: collapse;
+
             width: 100%;
-            margin-top: 20px;
+            min-width: 900px;
         }
 
         th,
         td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            border: 1px solid #ddd;
+
+            padding: 13px;
+
             text-align: left;
+
+            font-size: 16px;
+
+            white-space: nowrap;
         }
 
         th {
             background-color: #eeeeee;
         }
 
-        a {
+        td a {
+            display: inline-block;
+
+            padding: 8px 11px;
+
+            border-radius: 6px;
+
+            background-color: #eee;
+
+            color: #222;
+
             text-decoration: none;
         }
+
+        td form {
+            margin: 0;
+        }
+
+        td button {
+            min-height: 40px;
+
+            padding: 8px 12px;
+
+            border: none;
+            border-radius: 6px;
+
+            background-color: #b3261e;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 18px 12px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .acoes-topo {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .acoes-topo a,
+            .acoes-topo form,
+            .acoes-topo button {
+                width: 100%;
+            }
+
+            .acoes-topo a,
+            .acoes-topo button {
+                min-height: 50px;
+                font-size: 17px;
+            }
+
+            th,
+            td {
+                font-size: 16px;
+                padding: 12px;
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<h1>Veículos cadastrados</h1>
+<div class="container">
 
-<a th:href="@{/principal}">
-    Início
-</a>
+    <h1>
+        Veículos cadastrados
+    </h1>
 
-|
 
-<a th:href="@{/veiculos/novo}">
-    Cadastrar novo veículo
-</a>
+    <div class="acoes-topo">
 
-<form th:action="@{/logout}" method="post" style="display: inline-block; margin-left: 15px;">
-    <button type="submit">Sair</button>
-</form>
+        <a th:href="@{/principal}">
+            Início
+        </a>
 
-<p th:if="${sucesso}" th:text="${sucesso}" role="status"
-   style="color: #146c2e;"></p>
-<p th:if="${erro}" th:text="${erro}" role="alert"
-   style="color: #b00020;"></p>
-<table>
+        <a th:href="@{/veiculos/novo}">
+            Cadastrar novo veículo
+        </a>
 
-    <thead>
+        <form th:action="@{/logout}"
+              method="post">
 
-    <tr>
-        <th>ID</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Placa</th>
-        <th>Ano</th>
-        <th>Cor</th>
-        <th>Status</th>
-        <th>Documentos</th>
-        <th>Ações</th>
-    </tr>
+            <button type="submit">
+                Sair
+            </button>
 
-    </thead>
+        </form>
 
-    <tbody>
+    </div>
 
-    <tr th:each="veiculo : ${veiculos}">
 
-        <td th:text="${veiculo.idVeiculo}"></td>
+    <p th:if="${sucesso}"
+       th:text="${sucesso}"
+       role="status"
+       class="mensagem-sucesso">
+    </p>
 
-        <td th:text="${veiculo.marca}"></td>
 
-        <td th:text="${veiculo.modelo}"></td>
+    <p th:if="${erro}"
+       th:text="${erro}"
+       role="alert"
+       class="mensagem-erro">
+    </p>
 
-        <td th:text="${veiculo.placa}"></td>
 
-        <td th:text="${veiculo.anoModelo}"></td>
+    <div class="tabela-container">
 
-        <td th:text="${veiculo.cor}"></td>
+        <table>
 
-        <td th:text="${veiculo.status}"></td>
+            <thead>
 
-        <td>
-            <a th:href="@{/veiculos/{id}/documentos(id=${veiculo.idVeiculo})}">
-                Ver documentos
-            </a>
-        </td>
+            <tr>
+                <th>ID</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Placa</th>
+                <th>Ano</th>
+                <th>Cor</th>
+                <th>Status</th>
+                <th>Documentos</th>
+                <th>Ações</th>
+            </tr>
 
-        <td>
-            <form th:action="@{/veiculos/{id}/excluir(id=${veiculo.idVeiculo})}"
-                  method="post"
-                  onsubmit="return confirm('Deseja excluir este cadastro? Esta ação não pode ser desfeita.');">
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
+            </thead>
 
-    </tbody>
 
-</table>
+            <tbody>
+
+            <tr th:each="veiculo : ${veiculos}">
+
+                <td th:text="${veiculo.idVeiculo}">
+                </td>
+
+                <td th:text="${veiculo.marca}">
+                </td>
+
+                <td th:text="${veiculo.modelo}">
+                </td>
+
+                <td th:text="${veiculo.placa}">
+                </td>
+
+                <td th:text="${veiculo.anoModelo}">
+                </td>
+
+                <td th:text="${veiculo.cor}">
+                </td>
+
+                <td th:text="${veiculo.status}">
+                </td>
+
+
+                <td>
+
+                    <a th:href="@{/veiculos/{id}/documentos(id=${veiculo.idVeiculo})}">
+                        Ver documentos
+                    </a>
+
+                </td>
+
+
+                <td>
+
+                    <form th:action="@{/veiculos/{id}/excluir(id=${veiculo.idVeiculo})}"
+                          method="post"
+                          onsubmit="return confirm('Deseja excluir este cadastro? Esta ação não pode ser desfeita.');">
+
+                        <button type="submit">
+                            Excluir
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 </body>
-
 </html>
